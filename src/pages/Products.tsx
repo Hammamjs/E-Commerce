@@ -50,7 +50,7 @@ const Products = () => {
                     Refine your product search
                   </SheetDescription>
                 </SheetHeader>
-                <div className="mt-6">
+                <div className="mt-6 overflow-y-scroll">
                   <FilterSidebar
                     categories={categories}
                     brands={brands}

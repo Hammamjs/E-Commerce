@@ -6,6 +6,7 @@ import {
 } from '@/api/Reviews';
 import { useUserStore } from '@/stores/useUserStore';
 import type { ProductReviewsProps, Review } from '@/types/product';
+import handleError from '@/utils/ErrorHandler';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
@@ -31,14 +32,10 @@ const useReview = ({ onAddReview, productId }: ProductReviewsProps) => {
   const { mutate: AddReviewMutation } = useMutation({
     mutationKey: ['add-review'],
     mutationFn: addReview,
-    onSuccess: (data) => {
+    onSuccess: () => {
       refetch();
-      console.log('Review Added successfully');
-      console.log(data);
     },
-    onError: (err) => {
-      console.log(err);
-    },
+    onError: (err) => handleError(err, 'reviews'),
   });
 
   const { mutate: updateReviewMutation } = useMutation({

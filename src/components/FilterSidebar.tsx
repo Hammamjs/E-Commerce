@@ -30,7 +30,7 @@ const FilterSidebar = ({
   updateFilter,
   clearFilters,
 }: FilterSidebarProps) => (
-  <div className="space-y-6">
+  <div className="space-y-6 p-2">
     <div>
       <h3 className="text-lg font-semibold mb-4">Categories</h3>
       <div className="space-y-2">
