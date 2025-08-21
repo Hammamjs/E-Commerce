@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardContent } from './ui/card';
 import { Link } from 'react-router-dom';
 import { Star } from 'lucide-react';

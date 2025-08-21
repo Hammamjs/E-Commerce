@@ -29,31 +29,7 @@ import useOrders from '@/hooks/use-orders';
 import useProfile from '@/hooks/use-profile';
 
 const Profile = () => {
-  // const orderHistory = [
-  //   {
-  //     id: 'ORD-2024-001',
-  //     date: '2024-01-15',
-  //     status: 'Delivered',
-  //     total: 299.99,
-  //     items: 2,
-  //   },
-  //   {
-  //     id: 'ORD-2024-002',
-  //     date: '2024-01-10',
-  //     status: 'Processing',
-  //     total: 599.99,
-  //     items: 1,
-  //   },
-  //   {
-  //     id: 'ORD-2024-003',
-  //     date: '2024-01-05',
-  //     status: 'Shipped',
-  //     total: 189.99,
-  //     items: 3,
-  //   },
-  // ];
-
-  const { orders } = useOrders();
+  const { orders } = useOrders({});
   const {
     user,
     cart,

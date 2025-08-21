@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { TableCell } from './ui/table';
 import type { OrderStatus, OrdersType } from '@/types/Orders';
 import { Calendar } from 'lucide-react';

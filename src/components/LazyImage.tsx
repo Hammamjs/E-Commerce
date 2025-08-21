@@ -1,4 +1,4 @@
-import React, { forwardRef, type ImgHTMLAttributes } from 'react';
+import { forwardRef, type ImgHTMLAttributes } from 'react';
 
 const LazyImage = forwardRef<
   HTMLImageElement,
