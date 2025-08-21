@@ -31,7 +31,7 @@ const SearchBox = () => {
               filterSrearch.map((match) => (
                 <Link
                   onClick={() => handleSubmitSearch(closePopover)}
-                  to={`/product/${match._id}`}
+                  to={`/product-details/${match._id}`}
                   className="w-full p-1 hover:bg-gray-700 transition flex"
                 >
                   {match.name}
