@@ -15,6 +15,7 @@ const useProductDetails = () => {
   const product = useProductsStore(
     useShallow((state) => state.getProduct(id!))
   ) as Product;
+
   const products = useProductsStore(useShallow((state) => state.products));
 
   const [selectedImage, setSelectedImage] = useState(0);

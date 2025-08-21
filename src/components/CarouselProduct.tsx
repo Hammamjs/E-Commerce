@@ -30,7 +30,7 @@ const CarouselProduct = ({ product }: { product: Product }) => {
       <Card className="group hover:shadow-glow w-full transition-all duration-300 hover:-translate-y-2 bg-card/80 backdrop-blur-sm border-border/50">
         <CardContent className="p-0">
           <div className="relative overflow-hidden rounded-t-lg">
-            <Link to={`/product/${product._id}`}>
+            <Link to={`/product-details/${product._id}`}>
               <img
                 src={product.image}
                 alt={product.name}

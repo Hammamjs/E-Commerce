@@ -14,7 +14,7 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4 flex gap-3 flex-col md:flex-row items-center justify-between">
         <div className="flex items-center space-x-8">
           <Link to="/">
-            <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+            <h1 className="md:text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
               E-store
             </h1>
           </Link>
@@ -28,12 +28,20 @@ const Header = () => {
           {!user?.username && (
             <div className="md:flex items-center space-x-2">
               <Link to="/login">
-                <Button variant="ghost" size="sm">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs md:text-sm"
+                >
                   Login
                 </Button>
               </Link>
               <Link to="/signup">
-                <Button variant="outline" size="sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs md:text-sm"
+                >
                   Sign Up
                 </Button>
               </Link>
@@ -46,27 +54,30 @@ const Header = () => {
               </Button>
             </Link>
           )}
-          <Link to="/favorites" className="relative">
-            <Button variant="ghost" size="icon">
-              <Heart className="h-5 w-5" />
-              {favorites && favorites.length > 0 && (
-                <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
-                  {favorites.length}
-                </Badge>
-              )}
-            </Button>
-          </Link>
-          <Link to="/cart" className="relative">
-            <Button variant="ghost" size="icon">
-              <ShoppingBag className="h-5 w-5" />
-              {totalItems > 0 && (
-                <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
-                  {totalItems}
-                </Badge>
-              )}
-            </Button>
-          </Link>
-
+          {user?.username && (
+            <Link to="/favorites" className="relative">
+              <Button variant="ghost" size="icon">
+                <Heart className="h-5 w-5" />
+                {favorites && favorites.length > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                    {favorites.length}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
+          )}
+          {user?.username && (
+            <Link to="/cart" className="relative">
+              <Button variant="ghost" size="icon">
+                <ShoppingBag className="h-5 w-5" />
+                {totalItems > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                    {totalItems}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
+          )}
           <MobileMenu isActive={isActive} />
         </div>
       </div>

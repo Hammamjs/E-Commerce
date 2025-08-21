@@ -5,7 +5,7 @@ import heroImage from '@/assets/hero_img.jpg';
 
 const Hero = () => {
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <section className="min-h-screen h-full flex items-center justify-center relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-primary opacity-90"></div>
       <div
         className="absolute inset-0 bg-cover bg-center"

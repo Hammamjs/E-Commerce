@@ -1,9 +1,10 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { sliceCategory } from '@/utils/SliceCategory';
-import { ArrowRight, Link } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 import type { Product } from '@/types/product';
 import { memo } from 'react';
+import { Button } from './ui/button';
+import { Link } from 'react-router-dom';
 
 interface CategoryListProps {
   name: string;

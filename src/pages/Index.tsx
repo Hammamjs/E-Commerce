@@ -5,7 +5,7 @@ import ProductCarousel from '@/components/Carousel';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background mt-28">
       <Hero />
       <ProductCarousel />
       <ProductGrid />

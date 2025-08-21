@@ -4,10 +4,15 @@ import { ArrowRight } from 'lucide-react';
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import { useProductsStore } from '@/stores/useProductsStore';
 import CategoryList from '@/components/CategoryList';
+import { Link } from 'react-router-dom';
+import { useShallow } from 'zustand/shallow';
 
 const Categories = () => {
-  const categories = useCategoriesStore((state) => state.categories);
-  const Products = useProductsStore((state) => state.products);
+  const categories = useCategoriesStore(
+    useShallow((state) => state.categories)
+  );
+  const Products = useProductsStore(useShallow((state) => state.products));
+
   return (
     <div className="min-h-screen bg-background pt-20">
       <div className="container mx-auto px-4 py-12">
@@ -45,10 +50,12 @@ const Categories = () => {
                 <p className="mb-6 opacity-90">
                   Check out the latest products that just landed in our store
                 </p>
-                <Button variant="secondary">
-                  Shop New Arrivals
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                <Link to="/new-arrivals">
+                  <Button variant="secondary">
+                    Shop New Arrivals
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
@@ -58,10 +65,12 @@ const Categories = () => {
                 <p className="mb-6 text-foreground/80">
                   Discover what everyone else is buying this month
                 </p>
-                <Button>
-                  View Best Sellers
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                <Link to="/best-sellers">
+                  <Button>
+                    View Best Sellers
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>

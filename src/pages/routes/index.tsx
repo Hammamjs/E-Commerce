@@ -11,6 +11,8 @@ const Products = lazy(() => import('@/pages/Products'));
 const Categories = lazy(() => import('@/pages/Categories'));
 const CodeVerification = lazy(() => import('@/pages/CodeVerification'));
 const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
+const NewArrivals = lazy(() => import('@/pages/NewArrivals'));
+const BestSellers = lazy(() => import('@/pages/BestSellers'));
 const ProductDetail = lazy(() => import('@/pages/ProductDetail'));
 const SignUp = lazy(() => import('@/pages/SignUp'));
 const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'));
@@ -53,6 +55,14 @@ export const routes: RouteObject[] = [
       {
         path: '/product-details/:id',
         element: <ProductDetail />,
+      },
+      {
+        path: '/new-arrivals',
+        element: <NewArrivals />,
+      },
+      {
+        path: '/best-sellers',
+        element: <BestSellers />,
       },
     ],
   },

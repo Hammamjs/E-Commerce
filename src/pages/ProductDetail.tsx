@@ -116,7 +116,7 @@ const ProductDetail = () => {
           {/* Product Info */}
           <div className="space-y-6">
             {product.tag && (
-              <Badge className="bg-primary text-primary-foreground">
+              <Badge className="bg-primary text-primary-foreground capitalize">
                 {product.tag}
               </Badge>
             )}
@@ -149,7 +149,7 @@ const ProductDetail = () => {
               )}
               {product.discountPrice && (
                 <Badge variant="destructive">
-                  Save ${product.price - product.discountPrice}
+                  Save ${(product.price - product.discountPrice).toFixed(2)}
                 </Badge>
               )}
             </div>
