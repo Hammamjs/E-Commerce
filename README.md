@@ -1,4 +1,4 @@
-# UNI E‑Commerce
+# E‑Commerce
 
 A modular e‑commerce scaffold for learning and building online stores. Includes a Node.js + MongoDB backend, a modern frontend, and tooling to run locally or in containers.
 
