@@ -2,14 +2,7 @@ import { Input } from '@/components/ui/input';
 import useAddProduct from '@/hooks/useAddProduct';
 
 const ColorPicker = () => {
-  const {
-    selectedColor,
-    handleColorOnChange,
-    handleKeyDown,
-    addColor,
-    colors,
-    removeColor,
-  } = useAddProduct();
+  const { state, dispatch } = useAddProduct();
 
   return (
     <>
@@ -19,33 +12,21 @@ const ColorPicker = () => {
           <Input
             type="color"
             className="w-16 h-10 p-1 rounded cursor-pointer"
-            value={selectedColor}
-            onChange={handleColorOnChange}
+            value={state.selectedColor}
+            onChange={(e) =>
+              dispatch({ type: 'ADD_COLOR', payload: e.target.value })
+            }
           />
-          <Input
-            type="text"
-            placeholder="Press Enter to add"
-            value={selectedColor}
-            onChange={handleColorOnChange}
-            onKeyDown={handleKeyDown}
-          />
-          <button
-            onClick={addColor}
-            className="px-3 py-2 bg-black text-white rounded"
-            type="button"
-          >
-            Add
-          </button>
         </div>
 
         <div className="mt-4 flex gap-2">
-          {colors.map((color, idx) => (
+          {state.colors.map((color, idx) => (
             <div
-              key={idx}
+              key={color}
               className="w-6 h-6 shadow-[0_0_10px_rgba(255,255,255,0.3)] bg-black text-white p-4 rounded cursor-pointer"
               style={{ backgroundColor: color }}
               title={color}
-              onClick={() => removeColor(idx)}
+              onClick={() => dispatch({ type: 'REMOVE_COLOR', payload: idx })}
             />
           ))}
         </div>

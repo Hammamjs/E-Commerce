@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import useCart from '@/hooks/use-cart';
 import useFavorites from '@/hooks/use-favorites';
 import useProductCarousel from '@/hooks/use-carouselProduct';
+import CustomImage from './shared/customImg';
 
 const CarouselProduct = ({ product }: { product: Product }) => {
   const { handleAddOrUpdateCart } = useCart();
@@ -19,7 +20,7 @@ const CarouselProduct = ({ product }: { product: Product }) => {
       handleAddOrUpdateCart,
       handleUpdateFav,
       isFavorite,
-    }
+    },
   );
 
   return (
@@ -31,10 +32,10 @@ const CarouselProduct = ({ product }: { product: Product }) => {
         <CardContent className="p-0">
           <div className="relative overflow-hidden rounded-t-lg">
             <Link to={`/product-details/${product._id}`}>
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+              <CustomImage
+                img={product.image}
+                productName={product.name}
+                className="transition-transform duration-500 group-hover:scale-110"
               />
             </Link>
 

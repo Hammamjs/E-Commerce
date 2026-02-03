@@ -1,5 +1,6 @@
 import type { FilterState } from '@/types/product';
 import { Slider } from '../ui/slider';
+import { memo } from 'react';
 
 interface FilterPriceProps {
   filters: FilterState;
@@ -24,4 +25,4 @@ const FilterPrice = ({ filters, updateFilter }: FilterPriceProps) => {
   );
 };
 
-export default FilterPrice;
+export default memo(FilterPrice);
