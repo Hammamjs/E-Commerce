@@ -4,6 +4,7 @@ import { productSchema, type ProductFormData } from '@/schema/ProductSchema';
 import {
   useCallback,
   useEffect,
+  useReducer,
   useState,
   type ChangeEvent,
   type KeyboardEvent,
@@ -16,20 +17,28 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AddProduct } from '@/api/ProductsApi';
 import type { AddProductType } from '@/types/product';
 import { useShallow } from 'zustand/shallow';
+import {
+  AddProductInitialState,
+  AddProductReducer,
+} from '@/reducer/add-product.reducer';
 
 const useAddProduct = () => {
-  const [features, setFeatures] = useState<string[]>(['']);
-  const [images, setImages] = useState<string[]>(['']);
-  const [colors, setColors] = useState<string[]>(['']);
-  const [size, setSize] = useState<string[]>(['']);
-  const [typedSize, setTypedSize] = useState<string>();
-  const [selectedColor, setSelectedColor] = useState<string>('#000');
+  // const [features, setFeatures] = useState<string[]>(['']);
+  // const [images, setImages] = useState<string[]>(['']);
+  // const [colors, setColors] = useState<string[]>(['']);
+  // const [size, setSize] = useState<string[]>(['']);
+  // const [typedSize, setTypedSize] = useState<string>();
+  // const [selectedColor, setSelectedColor] = useState<string>('#000');
+  const [state, dispatch] = useReducer(
+    AddProductReducer,
+    AddProductInitialState,
+  );
   const { toast } = useToast();
   const navigate = useNavigate();
 
   const user = useUserStore(useShallow((state) => state.user));
   const categories = useCategoriesStore(
-    useShallow((state) => state.categories)
+    useShallow((state) => state.categories),
   );
 
   const form = useForm<ProductFormData>({
@@ -60,94 +69,89 @@ const useAddProduct = () => {
     },
   });
 
-  const addFeature = () => setFeatures((prev) => [...prev, '']);
+  // const addFeature = () => setFeatures((prev) => [...prev, '']);
 
-  const removeFeature = useCallback(
-    (index: number) => setFeatures(features.filter((_, i) => i !== index)),
-    []
-  );
-  const updateFeature = useCallback((index: number, value: string) => {
-    const newFeatures = [...features];
-    newFeatures[index] = value;
-    setFeatures(newFeatures);
-  }, []);
+  // const removeFeature = useCallback(
+  //   (index: number) => setFeatures(features.filter((_, i) => i !== index)),
+  //   [],
+  // );
+  // const updateFeature = useCallback((index: number, value: string) => {
+  //   const newFeatures = [...features];
+  //   newFeatures[index] = value;
+  //   setFeatures(newFeatures);
+  // }, []);
 
-  const addImage = () => setImages([...images, '']);
-  const removeImage = (index: number) =>
-    setImages(images.filter((_, i) => i !== index));
-  const updateImage = (index: number, value: string) => {
-    const newImages = [...images];
-    newImages[index] = value;
-    setImages(newImages);
-  };
+  // const addImage = () => setImages([...images, '']);
+  // const removeImage = (index: number) =>
+  //   setImages(images.filter((_, i) => i !== index));
+  // const updateImage = (index: number, value: string) => {
+  //   const newImages = [...images];
+  //   newImages[index] = value;
+  //   setImages(newImages);
+  // };
 
   const handleColorOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSelectedColor(e.target.value);
+    dispatch({ type: 'SET_COLOR', payload: e.target.value });
   };
 
-  const addColor = () => {
-    if (colors && !colors.includes(selectedColor)) {
-      setColors((prev) => [
-        ...prev.filter((val) => val != ''),
-        selectedColor.trim(),
-      ]);
-    }
-  };
+  // const addColor = () => {
+  //   if (colors && !colors.includes(selectedColor)) {
+  //     setColors((prev) => [
+  //       ...prev.filter((val) => val != ''),
+  //       selectedColor.trim(),
+  //     ]);
+  //   }
+  // };
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      addColor();
-    }
-  };
+  // const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.key === 'Enter') {
+  //     e.preventDefault();
+  //    dispatch({type: 'ADD_COLOR', payload: e.})
+  //   }
+  // };
 
-  const removeColor = (index: number) => {
-    setColors(colors.filter((_, i) => i !== index));
-  };
+  // const removeColor = (index: number) => {
+  //   setColors(colors.filter((_, i) => i !== index));
+  // };
 
-  useEffect(() => {
-    if (!typedSize && !typedSize?.includes(',')) return;
+  // useEffect(() => {
+  //   if (!typedSize && !typedSize?.includes(',')) return;
 
-    const newSizes = typedSize
-      .split(',')
-      .map((s) => s.trim().toLowerCase())
-      .filter((s) => !size.includes(s) && ['s', 'm', 'l', 'xl'].includes(s));
+  //   const newSizes = typedSize
+  //     .split(',')
+  //     .map((s) => s.trim().toLowerCase())
+  //     .filter((s) => !size.includes(s) && ['s', 'm', 'l', 'xl'].includes(s));
 
-    if (newSizes.length) {
-      setSize((prev) => [...prev.filter((s) => s !== ''), ...newSizes]);
-      console.log('Sizes added:', newSizes);
-      setTypedSize('');
-    }
-  }, [typedSize]);
+  //   if (newSizes.length) {
+  //     setSize((prev) => [...prev.filter((s) => s !== ''), ...newSizes]);
+  //     console.log('Sizes added:', newSizes);
+  //     setTypedSize('');
+  //   }
+  // }, [typedSize]);
 
-  const removeSize = (size: string) =>
-    setSize((prev) => prev.filter((s) => s !== size));
+  // const removeSize = (size: string) =>
+  //   setSize((prev) => prev.filter((s) => s !== size));
 
   const onSubmit = useCallback(async (data: ProductFormData) => {
     const productData = {
       ...data,
       user: user!._id,
-      features: features.filter((f) => f.trim() !== ''),
-      images: images.filter((img) => img.trim() !== ''),
-      image: images[0], // slice first image from images as cover
+      features: state.features,
+      images: state.images,
+      image: state.images[0], // slice first image from images as cover
       ratings: {
         average: 0,
         count: 0,
       },
       attributes: {
-        colors,
-        size,
+        colors: state.colors,
+        size: state.size,
       },
     };
 
     try {
       AddProductMutation(productData as unknown as AddProductType);
       console.log('Product data:', productData);
-
-      // Reset form and navigate back
-      form.reset();
-      setFeatures(['']);
-      setImages(['']);
       navigate('/products');
     } catch (err) {
       console.log('Error ', err);
@@ -155,31 +159,14 @@ const useAddProduct = () => {
   }, []);
 
   return {
-    typedSize,
-    setFeatures,
-    features,
-    setImages,
-    images,
-    addFeature,
-    removeFeature,
-    updateFeature,
-    addImage,
-    removeImage,
-    updateImage,
-    onSubmit,
+    state,
+    dispatch,
     form,
     navigate,
-    removeColor,
     categories,
-    colors,
     handleColorOnChange,
-    handleKeyDown,
-    selectedColor,
     AddProductMutation,
-    addColor,
-    removeSize,
-    setTypedSize,
-    size,
+    onSubmit,
   };
 };
 

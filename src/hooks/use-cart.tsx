@@ -4,7 +4,7 @@ import { useShallow } from 'zustand/shallow';
 import type { Product } from '@/types/product';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useUserStore } from '@/stores/useUserStore';
-import useCartMutation from './use-cartMutation';
+import userCartCommand from '../features/cart/command/userCommand';
 import { toast } from './use-toast';
 
 const useCart = () => {
@@ -12,8 +12,8 @@ const useCart = () => {
     updateCartMutation,
     deleteFromCartMutation,
     deleteCartMutation,
-    mutate,
-  } = useCartMutation();
+    addToCartMutation,
+  } = userCartCommand();
 
   const userId = useUserStore((state) => state.user?._id);
 
@@ -25,7 +25,7 @@ const useCart = () => {
         updateQuantity: state.updateQuantity,
         clearCart: state.clearCart,
         removeFromCart: state.removeFromCart,
-      }))
+      })),
     );
 
   // Track user cart
@@ -33,47 +33,36 @@ const useCart = () => {
     addToLocalstorage('user-cart', cart);
   }, [cart]);
 
-  const handleAddToCart = useCallback(
-    async (product: Product, qty: number = 1) => {
-      if (!userId) {
-        toast({ title: 'Please log in to add items to your cart.' });
-        return;
-      }
-      const existingItems = cart.items.find(
-        (item) => item.product._id === product._id
-      );
-      const updatedQty = (existingItems?.quantity || 0) + qty;
+  const itemsMap = useMemo(() => {
+    return Object.fromEntries(cart.items.map((i) => [i.product._id, i]));
+  }, [cart.items]);
 
-      addToCart({ product, quantity: qty });
-      if (userId)
-        mutate({
-          cart: {
-            product,
-            quantity: updatedQty,
-          },
-        });
+  const handleAddOrUpdateCart = useCallback(
+    (product: Product, qty: number = 1) => {
+      const existingItem = itemsMap[product._id];
+      const updatedQty = (existingItem?.quantity || 0) + qty;
+
+      if (existingItem) {
+        updateQuantity(product._id, updatedQty);
+        updateCartMutation({ items: product, quantity: updatedQty });
+      } else {
+        addToCart({ product, quantity: updatedQty });
+        addToCartMutation({ cart: { product, quantity: updatedQty } });
+      }
+
+      toast({
+        title: `Product updated`,
+        description: `${product.name} updated successfuly`,
+      });
     },
-    [addToCart, cart.items, userId]
-  );
-
-  const handleUpdateCart = useCallback(
-    async (product: Product, qty: number = 1) => {
-      if (!userId) {
-        toast({ title: 'Please log in to update your cart.' });
-        return;
-      }
-
-      const existInCart = cart.items.find(
-        (item) => item.product._id === product._id
-      );
-      const updatedQty = (existInCart?.quantity || 0) + qty;
-
-      updateQuantity(product._id, updatedQty);
-      if (userId) {
-        updateCartMutation({ items: product, quantity: qty });
-      }
-    },
-    [cart.items, updateCartMutation, updateQuantity, userId]
+    [
+      itemsMap,
+      addToCartMutation,
+      addToCart,
+      updateQuantity,
+      updateCartMutation,
+      userId,
+    ],
   );
 
   const handleDeleteProductFromCart = useCallback(
@@ -81,7 +70,7 @@ const useCart = () => {
       deleteFromCartMutation(productId);
       removeFromCart(productId);
     },
-    [deleteFromCartMutation, removeFromCart]
+    [deleteFromCartMutation, removeFromCart],
   );
 
   const handleClearCart = useCallback(
@@ -89,30 +78,10 @@ const useCart = () => {
       deleteCartMutation(cartId);
       clearCart();
     },
-    [clearCart, deleteCartMutation]
-  );
-
-  const itemsMap = useMemo(() => {
-    const map = new Map<string, (typeof cart.items)[0]>();
-    cart.items.forEach((item) => map.set(item.product._id, item));
-    return map;
-  }, [cart.items]);
-
-  const handleAddOrUpdateCart = useCallback(
-    (product: Product, qty: number) => {
-      requestIdleCallback(() => {
-        const isExistInCart = itemsMap.has(product._id);
-        return isExistInCart
-          ? handleUpdateCart(product, qty)
-          : handleAddToCart(product, qty);
-      });
-    },
-    [handleAddToCart, handleUpdateCart]
+    [clearCart, deleteCartMutation],
   );
 
   return {
-    handleAddToCart,
-    handleUpdateCart,
     handleDeleteProductFromCart,
     handleClearCart,
     handleAddOrUpdateCart,

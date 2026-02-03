@@ -33,14 +33,9 @@ const useFavorites = () => {
   const user = useUserStore(useShallow((state) => state.user));
 
   // Favorites store
-  const [favorites, toggleFavorite, isFavorite] = useFavoriteStore(
-    useShallow((state) => [
-      state.favorites,
-      state.toggleFavorite,
-      state.isFavorite,
-    ])
+  const [toggleFavorite, isFavorite] = useFavoriteStore(
+    useShallow((state) => [state.toggleFavorite, state.isFavorite]),
   );
-
   // Function
   const handleUpdateFav = useCallback(
     (product: Product) => {
@@ -48,18 +43,27 @@ const useFavorites = () => {
         toast({ title: 'Please log in to update your favorites.' });
         return;
       }
-      const currentlyFav = isFavorite(product._id);
+
+      // Before toggle fav state
+      const currentFavorite = isFavorite(product._id);
+
+      // toggle fav state
       toggleFavorite(product);
-      if (currentlyFav) {
-        RemoveFromFavMutation(product._id);
-      } else {
-        AddToFavoritesMutation(product._id);
-      }
+
+      return currentFavorite
+        ? RemoveFromFavMutation(product._id)
+        : AddToFavoritesMutation(product._id);
     },
-    [AddToFavoritesMutation, RemoveFromFavMutation, isFavorite, toggleFavorite]
+    [
+      AddToFavoritesMutation,
+      RemoveFromFavMutation,
+      isFavorite,
+      toggleFavorite,
+      user?._id,
+    ],
   );
 
-  return { handleUpdateFav, isFavorite, favorites };
+  return { handleUpdateFav, isFavorite };
 };
 
 export default useFavorites;
