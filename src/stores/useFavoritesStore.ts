@@ -2,8 +2,8 @@ import type { Product } from '@/types/product';
 import { create } from 'zustand';
 
 type Favorites = {
-  favorites: Product[];
-  setFavorites: (prodducts: Product[]) => void;
+  favorites: Record<string, boolean>;
+  setFavorites: (products: Product[]) => void;
   addToFavorites: (product: Product) => void;
   removeFromFavorites: (productId: string) => void;
   isFavorite: (productId: string) => boolean;
@@ -11,32 +11,28 @@ type Favorites = {
 };
 
 export const useFavoriteStore = create<Favorites>((set, get) => ({
-  favorites: [],
+  favorites: {},
   setFavorites: (products) =>
     set({
-      favorites: products,
+      favorites: Object.fromEntries(
+        products.map((product) => [product._id, true]),
+      ),
     }),
   addToFavorites: (product) =>
     set((state) => ({
-      favorites: state.favorites.find((fav) => fav._id === product._id)
-        ? state.favorites
-        : [...state.favorites, product],
+      favorites: { ...state.favorites, [product._id]: true },
     })),
-  isFavorite: (productId) => {
-    if (get().favorites)
-      return get().favorites.some((item) => item && item._id === productId);
-    return false;
-  },
+  isFavorite: (productId) => !!get().favorites[productId],
   removeFromFavorites: (productId) =>
-    set((state) => ({
-      favorites: state.favorites.filter((fav) => productId !== fav._id),
-    })),
+    set((state) => {
+      const { [productId]: _removed, ...reset } = state.favorites;
+      return { favorites: reset };
+    }),
   toggleFavorite: (product) =>
     set((state) => ({
-      favorites:
-        get().favorites &&
-        state.favorites.find((fav) => fav._id === product._id)
-          ? state.favorites.filter((fav) => fav._id !== product._id)
-          : [...state.favorites, product],
+      favorites: {
+        ...state.favorites,
+        [product._id]: !state.favorites[product._id],
+      },
     })),
 }));
