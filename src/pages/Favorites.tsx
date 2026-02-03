@@ -6,27 +6,22 @@ import { useShallow } from 'zustand/shallow';
 import useCart from '@/hooks/use-cart';
 import useFavorites from '@/hooks/use-favorites';
 import ProductTemplates from './ProductTemplates';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
+import { useProductsStore } from '@/stores/useProductsStore';
 
 const Favorites = () => {
-  const favorites = useFavoriteStore(useShallow((state) => state.favorites));
   const { handleAddOrUpdateCart } = useCart();
   const { handleUpdateFav } = useFavorites();
 
-  const handleAddAllToCart = useCallback(() => {
-    favorites.forEach((product) => {
-      if (product.inStock > 0) {
-        handleAddOrUpdateCart(product, 1);
-      }
-    });
-  }, [favorites, handleAddOrUpdateCart]);
+  const products = useProductsStore(useShallow((state) => state.products));
+  const favorite = useFavoriteStore(useShallow((state) => state.favorites));
 
-  const inStockFavorites = useMemo(
-    () => favorites.filter((p) => p.inStock > 0),
-    [favorites]
+  const userFavs = useMemo(
+    () => products.filter((product) => favorite[product._id]) ?? [],
+    [products, favorite],
   );
 
-  if (!favorites?.length) {
+  if (!userFavs?.length) {
     return (
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-12">
@@ -58,7 +53,7 @@ const Favorites = () => {
               My Favorites
             </h1>
             <p className="text-foreground/60">
-              {favorites?.length} items you love
+              {userFavs.length} items you love
             </p>
           </div>
           <Link
@@ -71,12 +66,12 @@ const Favorites = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {favorites.map((product, index) => (
+          {userFavs.map((product, index) => (
             <ProductTemplates
               key={product._id}
               index={index}
               product={product}
-              handleAddOrUpdateCart={handleAddOrUpdateCart}
+              handleAddOrUpdateCart={() => handleAddOrUpdateCart(product, 1)}
               handleUpdateFav={handleUpdateFav}
             />
           ))}
@@ -84,12 +79,7 @@ const Favorites = () => {
 
         {/* Quick Actions */}
         <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={handleAddAllToCart}
-            disabled={inStockFavorites.length === 0}
-          >
+          <Button variant="outline" size="lg">
             <ShoppingCart className="h-5 w-5 mr-2" />
             Add All to Cart
           </Button>

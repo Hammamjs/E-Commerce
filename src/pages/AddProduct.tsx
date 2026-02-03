@@ -27,20 +27,8 @@ import GenericInput from '@/components/GenericInput';
 import Size from '@/components/Size';
 
 const AddProduct = () => {
-  const {
-    form,
-    addFeature,
-    addImage,
-    features,
-    images,
-    onSubmit,
-    removeFeature,
-    removeImage,
-    updateFeature,
-    updateImage,
-    navigate,
-    categories,
-  } = useAddProduct();
+  const { form, state, onSubmit, dispatch, navigate, categories } =
+    useAddProduct();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-accent/5">
@@ -79,9 +67,13 @@ const AddProduct = () => {
                 className="space-y-6"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <CustomFieldText form={form} name="name" />
+                  <CustomFieldText form={form} name="Product name" />
 
-                  <CustomFieldText form={form} name="brand" />
+                  <CustomFieldText
+                    form={form}
+                    name="Brand"
+                    placeholder="Enter brand"
+                  />
 
                   <CustomFormFiled
                     form={form}
@@ -159,21 +151,35 @@ const AddProduct = () => {
                   <Label className="text-base font-semibold">
                     Product Features
                   </Label>
-                  {features.map((feature, index) => (
+                  {state.features.map((feature, index) => (
                     <GenericInput
-                      key={index}
-                      values={features}
+                      className={`${index != state.features.length - 1 ? 'transition-opacity opacity-30' : null}`}
+                      values={state.features}
                       value={feature}
                       index={index}
-                      onUpdate={updateFeature}
-                      onRemove={removeFeature}
+                      key={index}
+                      onUpdate={(value) =>
+                        dispatch({
+                          type: 'UPDATE_FEATURE',
+                          payload: { value, index },
+                        })
+                      }
+                      onRemove={() =>
+                        dispatch({ type: 'REMOVE_FEATURE', payload: index })
+                      }
                       placeholder="Enter product feature"
+                      disabled={index != state.features.length - 1}
                     />
                   ))}
+
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={addFeature}
+                    onClick={() =>
+                      dispatch({
+                        type: 'ADD_FEATURE',
+                      })
+                    }
                     className="w-full"
                   >
                     <Plus className="h-4 w-4 mr-2" />
@@ -186,21 +192,34 @@ const AddProduct = () => {
                   <Label className="text-base font-semibold">
                     Product Images (URLs)
                   </Label>
-                  {images.map((image, index) => (
+                  {state.images.map((image, index) => (
                     <GenericInput
-                      key={index}
-                      values={images}
+                      values={state.images}
+                      className={`${index != state.images.length - 1 ? 'transition-opacity opacity-30' : null}`}
                       value={image}
+                      key={index}
                       index={index}
-                      onUpdate={updateImage}
-                      onRemove={removeImage}
+                      onUpdate={(value) =>
+                        dispatch({
+                          type: 'UPDATE_IMAGE',
+                          payload: { value, index },
+                        })
+                      }
+                      onRemove={() =>
+                        dispatch({ type: 'REMOVE_IMAGE', payload: index })
+                      }
                       placeholder="Enter image URL"
+                      disabled={index != state.images.length - 1}
                     />
                   ))}
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={addImage}
+                    onClick={() =>
+                      dispatch({
+                        type: 'ADD_IMAGE',
+                      })
+                    }
                     className="w-full"
                   >
                     <Plus className="h-4 w-4 mr-2" />

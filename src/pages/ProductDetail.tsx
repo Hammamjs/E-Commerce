@@ -13,6 +13,7 @@ import { toast } from '@/hooks/use-toast';
 import ProductReviews from '@/components/ProductReviews';
 import useProductDetails from '@/hooks/use-productDetails';
 import RelatedProduct from '@/components/RelatedProduct';
+import CustomImage from '@/components/shared/customImg';
 
 const ProductDetail = () => {
   const {
@@ -43,7 +44,7 @@ const ProductDetail = () => {
 
   const relatedProducts = products
     .filter(
-      (p) => p.category._id === product.category._id && p._id !== product._id
+      (p) => p.category._id === product.category._id && p._id !== product._id,
     )
     .slice(0, 4);
 
@@ -101,12 +102,7 @@ const ProductDetail = () => {
                         : 'border-border'
                     }`}
                   >
-                    <img
-                      loading="lazy"
-                      src={image}
-                      alt={`${product.name} ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
+                    <CustomImage img={image} productName={product.name} />
                   </button>
                 ))}
               </div>
