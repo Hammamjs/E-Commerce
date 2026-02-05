@@ -64,6 +64,14 @@ export const AddProductReducer = (state: State, action: Action): State => {
       };
     }
 
+    case ACTION_TYPE.REMOVE_FEATURE:
+      return {
+        ...state,
+        features: state.features.filter(
+          (_feat, index) => index != action.payload,
+        ),
+      };
+
     case ACTION_TYPE.ADD_IMAGE:
       return { ...state, images: [...state.images, ''] };
 
