@@ -67,11 +67,11 @@ const AddProduct = () => {
                 className="space-y-6"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <CustomFieldText form={form} name="Product name" />
+                  <CustomFieldText form={form} name="name" />
 
                   <CustomFieldText
                     form={form}
-                    name="Brand"
+                    name="brand"
                     placeholder="Enter brand"
                   />
 
@@ -83,7 +83,7 @@ const AddProduct = () => {
                   />
 
                   <CustomFormFiled
-                    form={form.control}
+                    form={form}
                     type="number"
                     name="discountPrice"
                     label="Discount Price ($) - Optional"
@@ -97,7 +97,7 @@ const AddProduct = () => {
                         <FormLabel>Category</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
                         >
                           <FormControl>
                             <SelectTrigger>
