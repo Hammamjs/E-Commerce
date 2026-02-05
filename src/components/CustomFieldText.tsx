@@ -11,18 +11,22 @@ import { Input } from './ui/input';
 interface CustomFieldTextProps {
   form: any;
   name: string;
+  placeholder?: string;
 }
 
-const CustomFieldText = ({ form, name }: CustomFieldTextProps) => {
+const CustomFieldText = ({ form, name, placeholder }: CustomFieldTextProps) => {
   return (
     <FormField
       control={form.control}
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Product Name</FormLabel>
+          <FormLabel>{name}</FormLabel>
           <FormControl>
-            <Input placeholder="Enter product name" {...field} />
+            <Input
+              placeholder={`${placeholder ? placeholder : 'Enter product name'}`}
+              {...field}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>

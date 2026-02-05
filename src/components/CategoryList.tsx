@@ -1,5 +1,4 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { sliceCategory } from '@/utils/SliceCategory';
 import { ArrowRight } from 'lucide-react';
 import type { Product } from '@/types/product';
 import { memo } from 'react';
@@ -12,7 +11,7 @@ interface CategoryListProps {
   index: number;
   products: Product[];
 }
-const CategoryList = ({ name, image, index, products }: CategoryListProps) => {
+const CategoryList = ({ name, image, index }: CategoryListProps) => {
   return (
     <Card
       className="group bg-card/50 backdrop-blur-sm border-border/20 hover:shadow-glow transition-all duration-300 hover:-translate-y-2 animate-fade-in overflow-hidden"
@@ -28,9 +27,7 @@ const CategoryList = ({ name, image, index, products }: CategoryListProps) => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-4 left-4 text-white">
             <h3 className="text-xl font-semibold mb-1">{name}</h3>
-            <p className="text-white/80 text-sm">
-              {sliceCategory(products, name)} products
-            </p>
+            <p className="text-white/80 text-sm">{0} products</p>
           </div>
         </div>
 

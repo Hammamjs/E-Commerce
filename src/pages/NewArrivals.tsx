@@ -8,7 +8,7 @@ const NewArrivals = () => {
   const products = useProductsStore(useShallow((state) => state.products));
   // Filter products by "New Arrival" tag or recent additions (last 8 products as new)
   const newArrivalProducts = products.filter(
-    (product) => product.tag === 'new'
+    (product) => product.tag === 'new',
   );
 
   // If no products with "New Arrival" tag, show the latest 8 products
@@ -44,8 +44,8 @@ const NewArrivals = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {displayProducts.map((product, index) => (
-                <Product key={index} product={product} index={index} />
+              {displayProducts.map((product) => (
+                <Product key={product._id} product={product} />
               ))}
             </div>
 

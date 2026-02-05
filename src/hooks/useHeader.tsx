@@ -9,7 +9,9 @@ import { useLocation } from 'react-router-dom';
 const useHeader = () => {
   const location = useLocation();
   const totalItems = useCartStore((state) => state.cart).items.length;
-  const favorites = useFavoriteStore((state) => state.favorites);
+  const favorites = useFavoriteStore(
+    (state) => Object.entries(state.favorites).filter((fav) => fav[1]).length,
+  );
   const user = useUserStore((state) => state.user);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -29,7 +31,7 @@ const useHeader = () => {
         }
       }
     },
-    []
+    [],
   );
 
   const isActive = (path: string) => location.pathname === path;

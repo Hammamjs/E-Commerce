@@ -60,7 +60,7 @@ const Cart = () => {
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
             {cart.items.map((item) => (
-              <CartCard key={item.product._id} item={item} />
+              <CartCard key={item.product?._id} item={item} />
             ))}
 
             <div className="flex justify-end pt-4">

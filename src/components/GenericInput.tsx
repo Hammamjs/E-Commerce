@@ -1,13 +1,13 @@
 import { X } from 'lucide-react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { memo } from 'react';
+import React, { memo } from 'react';
 
-interface GenericInputProps {
+interface GenericInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   values: string[];
   value: string;
   index: number;
-  onUpdate: (index: number, value: string) => void;
+  onUpdate: (val: string) => void;
   onRemove: (index: number) => void;
   placeholder: string;
 }
@@ -19,13 +19,19 @@ const FeaturesInput = ({
   onUpdate,
   onRemove,
   placeholder,
+  className,
+  disabled,
 }: GenericInputProps) => {
   return (
     <div className="flex gap-2">
       <Input
         placeholder={placeholder}
         value={value}
-        onChange={(e) => onUpdate(index, e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onUpdate(e.target.value)
+        }
+        className={className}
+        disabled={disabled}
       />
       {values.length > 1 && (
         <Button

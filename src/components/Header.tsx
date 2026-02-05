@@ -58,9 +58,9 @@ const Header = () => {
             <Link to="/favorites" className="relative">
               <Button variant="ghost" size="icon">
                 <Heart className="h-5 w-5" />
-                {favorites && favorites.length > 0 && (
+                {favorites > 0 && (
                   <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
-                    {favorites.length}
+                    {favorites}
                   </Badge>
                 )}
               </Button>

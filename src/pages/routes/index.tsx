@@ -1,9 +1,11 @@
-import Layout from '@/components/Layout';
 import { lazy } from 'react';
-import type { RouteObject } from 'react-router-dom';
+import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import RequireAuth from '@/components/RequireAuth';
-import LayoutWithoutNav from '@/components/LayoutWithoutNav';
-import AppWrapper from '@/components/AppWrapper';
+
+// Lazy layout
+
+const Layout = lazy(() => import('@/components/Layout'));
+const LayoutWithoutNav = lazy(() => import('@/components/LayoutWithoutNav'));
 
 // Public routes
 const Index = lazy(() => import('@/pages/Index'));
@@ -34,11 +36,7 @@ const AdminProducts = lazy(() => import('@/pages/AdminProducts'));
 export const routes: RouteObject[] = [
   {
     path: '/',
-    element: (
-      <AppWrapper>
-        <Layout />
-      </AppWrapper>
-    ),
+    element: <Layout />,
     children: [
       {
         index: true,
@@ -140,11 +138,7 @@ export const routes: RouteObject[] = [
   },
 
   {
-    element: (
-      <AppWrapper>
-        <LayoutWithoutNav />
-      </AppWrapper>
-    ),
+    element: <LayoutWithoutNav />,
     children: [
       {
         element: <RequireAuth />,
@@ -166,18 +160,6 @@ export const routes: RouteObject[] = [
     path: '*',
     element: <NotFound />,
   },
-
-  // {
-  //   element: <LayoutWithoutNav />,
-  //   children: [
-  //     {
-  //       path: '/login',
-  //       element: <Login />,
-  //     },
-  //     {
-  //       path: '*',
-  //       element: <NotFound />,
-  //     },
-  //   ],
-  // },
 ];
+
+export const router = createBrowserRouter(routes);

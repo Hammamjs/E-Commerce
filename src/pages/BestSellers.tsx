@@ -14,10 +14,10 @@ const BestSellers = () => {
         .filter(
           (product) =>
             product.tag === 'Best Seller' ||
-            (product.ratings.average >= 4.5 && (product?.sales || 0) >= 40) // 60 is few but for development purposes
+            (product.ratings.average >= 4.5 && (product?.sales || 0) >= 40), // 60 is few but for development purposes
         )
         .sort((a, b) => b.ratings.count - a.ratings.count),
-    []
+    [],
   );
 
   return (
@@ -47,8 +47,8 @@ const BestSellers = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {bestSellerProducts.map((product, index) => (
-                <Product key={index} product={product} index={index} />
+              {bestSellerProducts.map((product) => (
+                <Product key={product._id} product={product} />
               ))}
             </div>
 

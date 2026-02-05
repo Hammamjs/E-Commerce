@@ -5,9 +5,9 @@ import BrandFilter from './filters/BrandFilter';
 import RatingFilter from './filters/RatingFilter';
 import type { Product, FilterState } from '@/types/product';
 import type { Categories } from '@/types/Categories';
-import { memo } from 'react';
 import FilterPrice from './filters/FilterPrice';
 import StockFilter from './filters/StockFilter';
+import { useCallback, useMemo } from 'react';
 
 interface FilterSidebarProps {
   products: Product[];
@@ -29,67 +29,91 @@ const FilterSidebar = ({
   toggleBrandFilter,
   updateFilter,
   clearFilters,
-}: FilterSidebarProps) => (
-  <div className="space-y-6 p-2">
-    <div>
-      <h3 className="text-lg font-semibold mb-4">Categories</h3>
-      <div className="space-y-2">
-        {categories.map((category) => (
-          <CategoryFilter
-            key={category._id}
-            id={category._id}
-            name={category.name}
-            products={products}
-            checked={filters.categories.includes(
-              category.name.trim().toLowerCase()
-            )}
-            onCheckedChange={() =>
-              toggleCategoryFilter(category.name.trim().toLowerCase())
-            }
-          />
-        ))}
+}: FilterSidebarProps) => {
+  const productCountByCategory = useMemo(() => {
+    const map: Record<string, number> = {};
+
+    for (const product of products) {
+      const category = product.category.name.trim().toLowerCase();
+      map[category] = (map[category] || 0) + 1;
+    }
+
+    return map;
+  }, [products]);
+
+  const handleToggleBrand = useCallback(
+    (brand: string) => {
+      toggleBrandFilter(brand);
+    },
+    [toggleBrandFilter],
+  );
+
+  return (
+    <div className="space-y-6 p-2">
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Categories</h3>
+        <div className="space-y-2">
+          {categories.map((category) => (
+            <CategoryFilter
+              key={category._id}
+              id={category._id}
+              name={category.name}
+              count={
+                productCountByCategory[
+                  category.name.trim().toLocaleLowerCase()
+                ] ?? 0
+              }
+              checked={filters.categories.includes(
+                category.name.trim().toLowerCase(),
+              )}
+              onCheckedChange={() =>
+                toggleCategoryFilter(category.name.trim().toLowerCase())
+              }
+            />
+          ))}
+        </div>
       </div>
-    </div>
-    <div>
-      <h3 className="text-lg font-semibold mb-4">Brands</h3>
-      <div className="space-y-2">
-        {brands.map((brand) => (
-          <BrandFilter
-            key={brand}
-            brand={brand}
-            toggleBrandFilter={toggleBrandFilter}
-            checked={filters.brands.includes(brand)}
-          />
-        ))}
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Brands</h3>
+        <div className="space-y-2">
+          {brands.map((brand) => (
+            <BrandFilter
+              key={brand}
+              brand={brand}
+              toggleBrandFilter={handleToggleBrand}
+              checked={filters.brands.includes(brand)}
+            />
+          ))}
+        </div>
       </div>
-    </div>
 
-    <div>
-      <h3 className="text-lg font-semibold mb-4">Price Range</h3>
-      <FilterPrice filters={filters} updateFilter={updateFilter} />
-    </div>
-
-    <div>
-      <h3 className="text-lg font-semibold mb-4">Minimum Rating</h3>
-      <div className="space-y-2">
-        {[0, 3, 4, 4.5].map((rating) => (
-          <RatingFilter
-            key={rating}
-            rating={rating}
-            filters={filters}
-            updateFilter={updateFilter}
-          />
-        ))}
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Price Range</h3>
+        <FilterPrice filters={filters} updateFilter={updateFilter} />
       </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Minimum Rating</h3>
+        <div className="space-y-2">
+          {[0, 3, 4, 4.5].map((rating) => (
+            <RatingFilter
+              key={rating}
+              rating={rating}
+              filters={filters}
+              updateFilter={updateFilter}
+            />
+          ))}
+        </div>
+      </div>
+
+      <StockFilter filters={filters} updateFilter={updateFilter} />
+
+      <Button onClick={clearFilters} variant="outline" className="w-full">
+        <X className="h-4 w-4 mr-2" />
+        Clear Filters
+      </Button>
     </div>
+  );
+};
 
-    <StockFilter filters={filters} updateFilter={updateFilter} />
-
-    <Button onClick={clearFilters} variant="outline" className="w-full">
-      <X className="h-4 w-4 mr-2" />
-      Clear Filters
-    </Button>
-  </div>
-);
-
-export default memo(FilterSidebar);
+export default FilterSidebar;

@@ -1,23 +1,21 @@
 import { memo } from 'react';
 import { Checkbox } from '../ui/checkbox';
 import { Label } from '@radix-ui/react-label';
-import { sliceCategory } from '@/utils/SliceCategory';
-import type { Product } from '@/types/product';
 
 interface CategoryFilterProps {
   id: string;
   name: string;
   checked: boolean;
   onCheckedChange: () => void;
-  products: Product[];
+  count: number;
 }
 
 const CategoryFilter = ({
   id,
   name,
-  products,
   checked,
   onCheckedChange,
+  count,
 }: CategoryFilterProps) => {
   return (
     <div className="flex items-center space-x-2">
@@ -27,7 +25,7 @@ const CategoryFilter = ({
         onCheckedChange={onCheckedChange}
       />
       <Label htmlFor={id} className="text-sm cursor-pointer">
-        {name} ({sliceCategory(products, name)})
+        {name} ({count})
       </Label>
     </div>
   );

@@ -7,7 +7,7 @@ const ProductGrid = () => {
   const products = useProductsStore(useShallow((state) => state.products));
   const featuredProducts = useMemo(
     () => (products ? products.slice(0, 4) : []),
-    [products]
+    [products],
   );
   return (
     <section className="py-20 bg-background">
@@ -22,8 +22,8 @@ const ProductGrid = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {featuredProducts.map((product, index) => (
-            <Product index={index} product={product} key={product._id} />
+          {featuredProducts.map((product) => (
+            <Product product={product} key={product._id} />
           ))}
         </div>
       </div>

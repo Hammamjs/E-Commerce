@@ -12,18 +12,6 @@ interface CartState {
   clearCart: () => void;
 }
 
-// const loadUserCartFromLocalstorage = () => {
-//   if (typeof window === 'undefined') return;
-
-//   try {
-//     return checkInLoacalstorage('user-cart')
-//       ? getLocalstorage('user-cart')
-//       : [];
-//   } catch {
-//     return [];
-//   }
-// };
-
 const cartItems: Cart = {
   items: [],
   totalItems: 0,
