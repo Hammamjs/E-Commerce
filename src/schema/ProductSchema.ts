@@ -8,6 +8,10 @@ export const productSchema = z.object({
   description: z.string().min(10, 'Description must be at least 10 characters'),
   inStock: z.number().min(1, 'Quantity must be greater than 0'),
   discountPrice: z.number().optional(),
+  images: z
+    .array(z.string().trim().min(1))
+    .min(1, 'At least one image is required'),
+  features: z.array(z.string().trim()).transform((arr) => arr.filter(Boolean)),
 });
 
 export type ProductFormData = z.infer<typeof productSchema>;
