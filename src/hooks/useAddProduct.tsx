@@ -1,14 +1,7 @@
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { productSchema, type ProductFormData } from '@/schema/ProductSchema';
-import {
-  useCallback,
-  useEffect,
-  useReducer,
-  useState,
-  type ChangeEvent,
-  type KeyboardEvent,
-} from 'react';
+import { useCallback, useEffect, useReducer, type ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUserStore } from '@/stores/useUserStore';
@@ -21,14 +14,9 @@ import {
   AddProductInitialState,
   AddProductReducer,
 } from '@/reducer/add-product.reducer';
+import handleError from '@/utils/ErrorHandler';
 
 const useAddProduct = () => {
-  // const [features, setFeatures] = useState<string[]>(['']);
-  // const [images, setImages] = useState<string[]>(['']);
-  // const [colors, setColors] = useState<string[]>(['']);
-  // const [size, setSize] = useState<string[]>(['']);
-  // const [typedSize, setTypedSize] = useState<string>();
-  // const [selectedColor, setSelectedColor] = useState<string>('#000');
   const [state, dispatch] = useReducer(
     AddProductReducer,
     AddProductInitialState,
@@ -50,8 +38,24 @@ const useAddProduct = () => {
       brand: '',
       description: '',
       inStock: 0,
+      images: [],
+      features: [],
+      discountPrice: 0,
     },
   });
+  useEffect(() => {
+    const cleanedImages = state.images.map((img) => img.trim()).filter(Boolean);
+
+    const cleanedFeatures = state.features.map((f) => f.trim()).filter(Boolean);
+
+    form.setValue('images', cleanedImages, { shouldValidate: true });
+    form.setValue('features', cleanedFeatures, { shouldValidate: true });
+  }, [state.images, state.features]);
+
+  useEffect(() => {
+    console.log('VALUES', form.getValues());
+    console.log('ERRORS', form.formState.errors);
+  }, [form.formState.errors]);
 
   const queryClient = useQueryClient();
   const { mutate: AddProductMutation } = useMutation({
@@ -64,81 +68,22 @@ const useAddProduct = () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
     },
 
-    onError: (err) => {
-      console.log(err);
-    },
+    onError: (err) => handleError(err),
   });
-
-  // const addFeature = () => setFeatures((prev) => [...prev, '']);
-
-  // const removeFeature = useCallback(
-  //   (index: number) => setFeatures(features.filter((_, i) => i !== index)),
-  //   [],
-  // );
-  // const updateFeature = useCallback((index: number, value: string) => {
-  //   const newFeatures = [...features];
-  //   newFeatures[index] = value;
-  //   setFeatures(newFeatures);
-  // }, []);
-
-  // const addImage = () => setImages([...images, '']);
-  // const removeImage = (index: number) =>
-  //   setImages(images.filter((_, i) => i !== index));
-  // const updateImage = (index: number, value: string) => {
-  //   const newImages = [...images];
-  //   newImages[index] = value;
-  //   setImages(newImages);
-  // };
 
   const handleColorOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: 'SET_COLOR', payload: e.target.value });
   };
 
-  // const addColor = () => {
-  //   if (colors && !colors.includes(selectedColor)) {
-  //     setColors((prev) => [
-  //       ...prev.filter((val) => val != ''),
-  //       selectedColor.trim(),
-  //     ]);
-  //   }
-  // };
+  const onSubmit = async (data: ProductFormData) => {
+    if (!user?._id) return;
 
-  // const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-  //   if (e.key === 'Enter') {
-  //     e.preventDefault();
-  //    dispatch({type: 'ADD_COLOR', payload: e.})
-  //   }
-  // };
-
-  // const removeColor = (index: number) => {
-  //   setColors(colors.filter((_, i) => i !== index));
-  // };
-
-  // useEffect(() => {
-  //   if (!typedSize && !typedSize?.includes(',')) return;
-
-  //   const newSizes = typedSize
-  //     .split(',')
-  //     .map((s) => s.trim().toLowerCase())
-  //     .filter((s) => !size.includes(s) && ['s', 'm', 'l', 'xl'].includes(s));
-
-  //   if (newSizes.length) {
-  //     setSize((prev) => [...prev.filter((s) => s !== ''), ...newSizes]);
-  //     console.log('Sizes added:', newSizes);
-  //     setTypedSize('');
-  //   }
-  // }, [typedSize]);
-
-  // const removeSize = (size: string) =>
-  //   setSize((prev) => prev.filter((s) => s !== size));
-
-  const onSubmit = useCallback(async (data: ProductFormData) => {
     const productData = {
       ...data,
-      user: user!._id,
-      features: state.features,
-      images: state.images,
-      image: state.images[0], // slice first image from images as cover
+      user: user._id,
+      features: data.features,
+      images: data.images,
+      image: data.images[0] ?? null, // slice first image from images as cover
       ratings: {
         average: 0,
         count: 0,
@@ -148,15 +93,15 @@ const useAddProduct = () => {
         size: state.size,
       },
     };
+    console.log('Product data:', productData);
 
     try {
-      AddProductMutation(productData as unknown as AddProductType);
-      console.log('Product data:', productData);
-      navigate('/products');
+      // AddProductMutation(productData as unknown as AddProductType);
+      // navigate('/products');
     } catch (err) {
       console.log('Error ', err);
     }
-  }, []);
+  };
 
   return {
     state,
