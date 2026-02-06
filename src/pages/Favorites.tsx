@@ -3,25 +3,14 @@ import { Heart, ShoppingCart, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFavoriteStore } from '@/stores/useFavoritesStore';
 import { useShallow } from 'zustand/shallow';
-import useCart from '@/hooks/use-cart';
-import useFavorites from '@/hooks/use-favorites';
 import ProductTemplates from './ProductTemplates';
-import { useMemo } from 'react';
-import { useProductsStore } from '@/stores/useProductsStore';
 
 const Favorites = () => {
-  const { handleAddOrUpdateCart } = useCart();
-  const { handleUpdateFav } = useFavorites();
-
-  const products = useProductsStore(useShallow((state) => state.products));
-  const favorite = useFavoriteStore(useShallow((state) => state.favorites));
-
-  const userFavs = useMemo(
-    () => products.filter((product) => favorite[product._id]) ?? [],
-    [products, favorite],
+  const favoritesIds = useFavoriteStore(
+    useShallow((state) => state.favoritesIds),
   );
 
-  if (!userFavs?.length) {
+  if (!favoritesIds?.length) {
     return (
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-12">
@@ -53,7 +42,7 @@ const Favorites = () => {
               My Favorites
             </h1>
             <p className="text-foreground/60">
-              {userFavs.length} items you love
+              {favoritesIds.length} items you love
             </p>
           </div>
           <Link
@@ -66,14 +55,8 @@ const Favorites = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {userFavs.map((product, index) => (
-            <ProductTemplates
-              key={product._id}
-              index={index}
-              product={product}
-              handleAddOrUpdateCart={() => handleAddOrUpdateCart(product, 1)}
-              handleUpdateFav={handleUpdateFav}
-            />
+          {favoritesIds.map((productId) => (
+            <ProductTemplates key={productId} productId={productId} />
           ))}
         </div>
 
