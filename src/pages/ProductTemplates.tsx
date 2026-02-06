@@ -15,7 +15,7 @@ interface ProductTemplatesProps {
 const ProductTemplates = ({ productId }: ProductTemplatesProps) => {
   const favorite = useFavoriteStore((state) => state.favoriteById[productId]);
   const { handleAddOrUpdateCart } = useCart(productId);
-  const { handleUpdateFav } = useFavorites();
+  const { handleUpdateFav } = useFavorites(favorite);
 
   if (!favorite) return null;
 
@@ -44,7 +44,7 @@ const ProductTemplates = ({ productId }: ProductTemplatesProps) => {
             <Button
               variant="glass"
               size="icon"
-              onClick={() => handleUpdateFav(favorite)}
+              onClick={handleUpdateFav}
               className="bg-red-500/20 hover:bg-red-500/30"
             >
               <Heart className="h-4 w-4 fill-red-500 text-red-500" />
