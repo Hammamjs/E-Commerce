@@ -8,7 +8,7 @@ interface UseProductCarousel {
   product: Product;
   handleUpdateFav: (product: Product) => void;
   isFavorite: (favId: string) => boolean;
-  handleAddOrUpdateCart: (product: Product, qty: number) => void;
+  handleAddOrUpdateCart: (productId: string, qty?: number) => void;
 }
 
 interface ProductCarouselHandler {
@@ -39,7 +39,7 @@ const useProductCarousel = ({
   }, [user?._id, handleUpdateFav, product, isFavorite]);
 
   const handleAddToCart = useCallback(() => {
-    handleAddOrUpdateCart(product, 1);
+    handleAddOrUpdateCart(product._id, 1);
   }, [product, handleAddOrUpdateCart]);
 
   const tagClass = useCallback((tag: string): string => {
