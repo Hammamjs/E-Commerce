@@ -8,27 +8,21 @@ import useCart from '@/hooks/use-cart';
 import useFavorites from '@/hooks/use-favorites';
 import useProductCarousel from '@/hooks/use-carouselProduct';
 import CustomImage from './shared/customImg';
-import { useShallow } from 'zustand/shallow';
 import { useProductsStore } from '@/stores/useProductsStore';
 
 const CarouselProduct = ({ productId }: { productId: string }) => {
-  const { handleAddOrUpdateCart } = useCart();
-  const { handleUpdateFav, isFavorite } = useFavorites();
-
-  const product = useProductsStore(
-    useShallow((state) => state.getProduct(productId)),
-  );
+  const { handleAddOrUpdateCart } = useCart(productId);
+  const product = useProductsStore((state) => state.getProduct(productId));
 
   if (!product) return null;
 
-  const { handleAddToCart, handleFavoriteClick, tagClass } = useProductCarousel(
-    {
-      product,
-      handleAddOrUpdateCart,
-      handleUpdateFav,
-      isFavorite,
-    },
-  );
+  const { handleUpdateFav, isFav } = useFavorites(product);
+
+  const { handleFavoriteClick, tagClass } = useProductCarousel({
+    product,
+    handleUpdateFav,
+    isFav,
+  });
 
   return (
     <CarouselItem
@@ -58,17 +52,13 @@ const CarouselProduct = ({ productId }: { productId: string }) => {
               variant="ghost"
               size="icon"
               className={`absolute top-3 right-3 rounded-full backdrop-blur-sm transition-colors duration-200 ${
-                isFavorite(product._id)
+                isFav
                   ? 'bg-destructive/20 text-destructive hover:bg-destructive/30'
                   : 'bg-background/20 text-foreground hover:bg-background/30'
               }`}
               onClick={handleFavoriteClick}
             >
-              <Heart
-                className={`h-4 w-4 ${
-                  isFavorite(product._id) ? 'fill-current' : ''
-                }`}
-              />
+              <Heart className={`h-4 w-4 ${isFav ? 'fill-current' : ''}`} />
             </Button>
           </div>
 
@@ -110,7 +100,7 @@ const CarouselProduct = ({ productId }: { productId: string }) => {
                 variant="outline"
                 size="icon"
                 className="group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-200"
-                onClick={handleAddToCart}
+                onClick={() => handleAddOrUpdateCart()}
               >
                 <ShoppingCart className="h-4 w-4" />
               </Button>
