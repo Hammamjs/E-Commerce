@@ -52,11 +52,6 @@ const useAddProduct = () => {
     form.setValue('features', cleanedFeatures, { shouldValidate: true });
   }, [state.images, state.features]);
 
-  useEffect(() => {
-    console.log('VALUES', form.getValues());
-    console.log('ERRORS', form.formState.errors);
-  }, [form.formState.errors]);
-
   const queryClient = useQueryClient();
   const { mutate: AddProductMutation } = useMutation({
     mutationFn: AddProduct,
@@ -93,11 +88,11 @@ const useAddProduct = () => {
         size: state.size,
       },
     };
-    console.log('Product data:', productData);
 
     try {
-      // AddProductMutation(productData as unknown as AddProductType);
-      // navigate('/products');
+      AddProductMutation(productData as unknown as AddProductType);
+      navigate('/products');
+      console.log('done');
     } catch (err) {
       console.log('Error ', err);
     }

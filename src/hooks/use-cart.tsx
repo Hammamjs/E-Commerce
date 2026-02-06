@@ -1,13 +1,13 @@
 import { addToLocalstorage } from '@/utils/LocalStorage';
 import { useCartStore } from '@/stores/useCartStore';
 import { useShallow } from 'zustand/shallow';
-import type { Product } from '@/types/product';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useUserStore } from '@/stores/useUserStore';
 import userCartCommand from '../features/cart/command/userCommand';
 import { toast } from './use-toast';
+import { useProductsStore } from '@/stores/useProductsStore';
 
-const useCart = () => {
+const useCart = (productId: string) => {
   const {
     updateCartMutation,
     deleteFromCartMutation,
@@ -16,6 +16,10 @@ const useCart = () => {
   } = userCartCommand();
 
   const userId = useUserStore((state) => state.user?._id);
+
+  const productById = useProductsStore(
+    useShallow((state) => state.productById),
+  );
 
   const { addToCart, cart, updateQuantity, clearCart, removeFromCart } =
     useCartStore(
@@ -38,12 +42,16 @@ const useCart = () => {
   }, [cart.items]);
 
   const handleAddOrUpdateCart = useCallback(
-    (product: Product, qty: number = 1) => {
-      const existingItem = itemsMap[product._id];
+    (qty: number = 1) => {
+      const existingItem = itemsMap[productId];
       const updatedQty = (existingItem?.quantity || 0) + qty;
 
+      const product = productById[productId];
+
+      if (!product) return toast({ title: 'Product not found' });
+
       if (existingItem) {
-        updateQuantity(product._id, updatedQty);
+        updateQuantity(productId, updatedQty);
         updateCartMutation({ items: product, quantity: updatedQty });
       } else {
         addToCart({ product, quantity: updatedQty });
@@ -62,6 +70,7 @@ const useCart = () => {
       updateQuantity,
       updateCartMutation,
       userId,
+      productById,
     ],
   );
 
