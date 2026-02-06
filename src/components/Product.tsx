@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import type { Product as ProductType } from '@/types/product';
 import useCart from '@/hooks/use-cart';
 import useFavorites from '@/hooks/use-favorites';
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { useFavoriteStore } from '@/stores/useFavoritesStore';
 import CustomImage from './shared/customImg';
 import { useShallow } from 'zustand/shallow';
@@ -16,14 +16,9 @@ interface ProductProps {
 
 export const Product = memo(({ product }: ProductProps) => {
   const { handleAddOrUpdateCart } = useCart(product._id);
-  const { handleUpdateFav } = useFavorites();
+  const { handleUpdateFav } = useFavorites(product);
 
   const isFavorite = useFavoriteStore(useShallow((state) => state.isFavorite));
-
-  const handleFavClick = useCallback(
-    () => handleUpdateFav(product),
-    [handleUpdateFav, product],
-  );
 
   return (
     <Card className="group bg-card/50 backdrop-blur-sm border-border/20 hover:shadow-glow transition-all duration-300 hover:-translate-y-2 animate-fade-in">
@@ -50,7 +45,7 @@ export const Product = memo(({ product }: ProductProps) => {
                   ? 'bg-destructive/20 text-destructive hover:bg-destructive/30'
                   : 'bg-background/20 text-foreground hover:bg-background/30'
               }`}
-              onClick={handleFavClick}
+              onClick={handleUpdateFav}
             >
               <Heart
                 className={`h-4 w-4 ${isFavorite(product._id) ? 'fill-current' : ''}`}
