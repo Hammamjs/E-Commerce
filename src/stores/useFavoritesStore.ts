@@ -1,8 +1,11 @@
 import type { Product } from '@/types/product';
+import { derivedState } from '@/utils/derivedState';
 import { create } from 'zustand';
 
 type Favorites = {
-  favorites: Record<string, boolean>;
+  favoriteById: Record<string, Product>;
+  favoritesIds: string[];
+  favorites: Product[];
   setFavorites: (products: Product[]) => void;
   addToFavorites: (product: Product) => void;
   removeFromFavorites: (productId: string) => void;
@@ -11,28 +14,65 @@ type Favorites = {
 };
 
 export const useFavoriteStore = create<Favorites>((set, get) => ({
-  favorites: {},
-  setFavorites: (products) =>
-    set({
-      favorites: Object.fromEntries(
-        products.map((product) => [product._id, true]),
-      ),
-    }),
+  favoritesIds: [],
+  favorites: [],
+  favoriteById: {},
+  setFavorites: (products) => {
+    const {
+      ids: favoritesIds,
+      map: favoriteById,
+      items: favorites,
+    } = derivedState(products);
+
+    return {
+      favoriteById,
+      favoritesIds,
+      favorites,
+    };
+  },
   addToFavorites: (product) =>
-    set((state) => ({
-      favorites: { ...state.favorites, [product._id]: true },
-    })),
-  isFavorite: (productId) => !!get().favorites[productId],
+    set((state) => {
+      const newFav = [...state.favorites, product];
+      const {
+        items: favorites,
+        map: favoriteById,
+        ids: favoritesIds,
+      } = derivedState(newFav);
+      return {
+        favorites,
+        favoriteById,
+        favoritesIds,
+      };
+    }),
+  isFavorite: (productId) => !!get().favoriteById[productId],
   removeFromFavorites: (productId) =>
     set((state) => {
-      const { [productId]: _removed, ...reset } = state.favorites;
-      return { favorites: reset };
+      const removedFav = state.favorites.filter((f) => f._id != productId);
+      const {
+        ids: favoritesIds,
+        items: favorites,
+        map: favoriteById,
+      } = derivedState(removedFav);
+      return { favorites, favoriteById, favoritesIds };
     }),
   toggleFavorite: (product) =>
-    set((state) => ({
-      favorites: {
-        ...state.favorites,
-        [product._id]: !state.favorites[product._id],
-      },
-    })),
+    set((state) => {
+      const toggleFav = get().favoriteById[product._id];
+      let toggleFavs = [...state.favorites];
+
+      if (!toggleFav) toggleFavs.push(product);
+      else toggleFavs = toggleFavs.filter((f) => f._id != product._id);
+
+      const {
+        map: favoriteById,
+        items: favorites,
+        ids: favoritesIds,
+      } = derivedState(toggleFavs);
+
+      return {
+        favoriteById,
+        favorites,
+        favoritesIds,
+      };
+    }),
 }));
