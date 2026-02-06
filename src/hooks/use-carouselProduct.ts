@@ -7,20 +7,17 @@ import { useShallow } from 'zustand/shallow';
 interface UseProductCarousel {
   product: Product;
   handleUpdateFav: (product: Product) => void;
-  isFavorite: (favId: string) => boolean;
-  handleAddOrUpdateCart: (productId: string, qty?: number) => void;
+  isFav: boolean;
 }
 
 interface ProductCarouselHandler {
-  handleAddToCart: () => void;
   handleFavoriteClick: () => void;
   tagClass: (tag: string) => string;
 }
 
 const useProductCarousel = ({
-  handleAddOrUpdateCart,
   handleUpdateFav,
-  isFavorite,
+  isFav,
   product,
 }: UseProductCarousel): ProductCarouselHandler => {
   const user = useUserStore(useShallow((state) => state.user));
@@ -32,15 +29,7 @@ const useProductCarousel = ({
     }
 
     handleUpdateFav(product);
-    toast({
-      title: isFavorite(product._id) ? 'Item removed' : 'Item Added',
-      description: product.name,
-    });
-  }, [user?._id, handleUpdateFav, product, isFavorite]);
-
-  const handleAddToCart = useCallback(() => {
-    handleAddOrUpdateCart(product._id, 1);
-  }, [product, handleAddOrUpdateCart]);
+  }, [user?._id, handleUpdateFav, product, isFav]);
 
   const tagClass = useCallback((tag: string): string => {
     switch (tag) {
@@ -55,7 +44,7 @@ const useProductCarousel = ({
     }
   }, []);
 
-  return { handleAddToCart, handleFavoriteClick, tagClass };
+  return { handleFavoriteClick, tagClass };
 };
 
 export default useProductCarousel;
