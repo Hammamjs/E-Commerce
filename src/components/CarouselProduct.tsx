@@ -3,16 +3,23 @@ import { Badge } from '@/components/ui/badge';
 import { Star, Heart, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CarouselItem } from './ui/carousel';
-import type { Product } from '@/types/product';
 import { Link } from 'react-router-dom';
 import useCart from '@/hooks/use-cart';
 import useFavorites from '@/hooks/use-favorites';
 import useProductCarousel from '@/hooks/use-carouselProduct';
 import CustomImage from './shared/customImg';
+import { useShallow } from 'zustand/shallow';
+import { useProductsStore } from '@/stores/useProductsStore';
 
-const CarouselProduct = ({ product }: { product: Product }) => {
+const CarouselProduct = ({ productId }: { productId: string }) => {
   const { handleAddOrUpdateCart } = useCart();
   const { handleUpdateFav, isFavorite } = useFavorites();
+
+  const product = useProductsStore(
+    useShallow((state) => state.getProduct(productId)),
+  );
+
+  if (!product) return null;
 
   const { handleAddToCart, handleFavoriteClick, tagClass } = useProductCarousel(
     {
@@ -25,7 +32,7 @@ const CarouselProduct = ({ product }: { product: Product }) => {
 
   return (
     <CarouselItem
-      key={product._id}
+      key={productId}
       className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3"
     >
       <Card className="group hover:shadow-glow w-full transition-all duration-300 hover:-translate-y-2 bg-card/80 backdrop-blur-sm border-border/50">

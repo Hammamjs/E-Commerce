@@ -8,23 +8,23 @@ import useFavorites from '@/hooks/use-favorites';
 import { memo, useCallback } from 'react';
 import { useFavoriteStore } from '@/stores/useFavoritesStore';
 import CustomImage from './shared/customImg';
+import { useShallow } from 'zustand/shallow';
 
 interface ProductProps {
   product: ProductType;
 }
 
 export const Product = memo(({ product }: ProductProps) => {
-  const { handleAddToCart } = useCart();
+  const { handleAddOrUpdateCart } = useCart(product._id);
   const { handleUpdateFav } = useFavorites();
-  const isFav = useFavoriteStore((state) => !!state.favorites[product._id]);
+
+  const isFavorite = useFavoriteStore(useShallow((state) => state.isFavorite));
+
   const handleFavClick = useCallback(
     () => handleUpdateFav(product),
     [handleUpdateFav, product],
   );
-  const handleAddToCartClick = useCallback(
-    () => handleAddToCart(product),
-    [handleAddToCart, product],
-  );
+
   return (
     <Card className="group bg-card/50 backdrop-blur-sm border-border/20 hover:shadow-glow transition-all duration-300 hover:-translate-y-2 animate-fade-in">
       <CardContent className="p-0">
@@ -46,13 +46,15 @@ export const Product = memo(({ product }: ProductProps) => {
               variant="ghost"
               size="icon"
               className={`absolute top-3 right-3 rounded-full backdrop-blur-sm transition-colors duration-200 ${
-                isFav
+                isFavorite(product._id)
                   ? 'bg-destructive/20 text-destructive hover:bg-destructive/30'
                   : 'bg-background/20 text-foreground hover:bg-background/30'
               }`}
               onClick={handleFavClick}
             >
-              <Heart className={`h-4 w-4 ${isFav ? 'fill-current' : ''}`} />
+              <Heart
+                className={`h-4 w-4 ${isFavorite(product._id) ? 'fill-current' : ''}`}
+              />
             </Button>
           </div>
         </div>
@@ -67,7 +69,7 @@ export const Product = memo(({ product }: ProductProps) => {
             <span className="text-2xl font-bold text-primary">
               ${product.discountPrice}
             </span>
-            <Button size="sm" onClick={handleAddToCartClick}>
+            <Button size="sm" onClick={() => handleAddOrUpdateCart()}>
               <ShoppingCart className="h-4 w-4 mr-2" />
               Add to Cart
             </Button>
