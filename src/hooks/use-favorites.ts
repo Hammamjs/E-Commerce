@@ -1,69 +1,45 @@
-import { addToFavoritesApi, removeFromFav } from '@/api/FavoritesApi';
 import { useFavoriteStore } from '@/stores/useFavoritesStore';
 import type { Product } from '@/types/product';
-import { useMutation } from '@tanstack/react-query';
 import { useShallow } from 'zustand/shallow';
 import { toast } from './use-toast';
-import handleError from '@/utils/ErrorHandler';
 import { useCallback } from 'react';
 import { useUserStore } from '@/stores/useUserStore';
+import { favoritesCommands } from '@/features/favorites/command/favorite.command';
 
-const useFavorites = () => {
-  // mutations
-  const { mutate: AddToFavoritesMutation } = useMutation({
-    mutationKey: ['add-fav'],
-    mutationFn: addToFavoritesApi,
-    onSuccess: (data) => {
-      toast({
-        title: data?.message,
-      });
-    },
-    onError: (err) => handleError(err, 'favorites'),
-  });
+const useFavorites = (product: Product) => {
+  const userId = useUserStore(useShallow((state) => state.user?._id));
 
-  const { mutate: RemoveFromFavMutation } = useMutation({
-    mutationKey: ['rem-fav'],
-    mutationFn: removeFromFav,
-    onSuccess: (data) => {
-      toast({ title: data.message });
-    },
-    onError: (err) => handleError(err, 'favorites'),
-  });
-
-  const user = useUserStore(useShallow((state) => state.user));
-
+  const {
+    AddToFavoritesCommand: { mutate: AddToFavoritesMutation },
+    RemoveFromFavCommand: { mutate: RemoveFromFavMutation },
+  } = favoritesCommands();
   // Favorites store
-  const [toggleFavorite, isFavorite] = useFavoriteStore(
-    useShallow((state) => [state.toggleFavorite, state.isFavorite]),
-  );
+  const toggleFavorite = useFavoriteStore((state) => state.toggleFavorite);
+  const isFav = useFavoriteStore((state) => state.isFavorite(product._id));
+
   // Function
-  const handleUpdateFav = useCallback(
-    (product: Product) => {
-      if (!user?._id) {
-        toast({ title: 'Please log in to update your favorites.' });
-        return;
-      }
+  const handleUpdateFav = useCallback(() => {
+    if (!userId) {
+      toast({ title: 'Please log in to update your favorites.' });
+      return;
+    }
 
-      // Before toggle fav state
-      const currentFavorite = isFavorite(product._id);
+    // toggle fav state
+    toggleFavorite(product);
 
-      // toggle fav state
-      toggleFavorite(product);
+    return isFav
+      ? RemoveFromFavMutation(product._id)
+      : AddToFavoritesMutation(product._id);
+  }, [
+    AddToFavoritesMutation,
+    RemoveFromFavMutation,
+    isFav,
+    toggleFavorite,
+    userId,
+    product._id,
+  ]);
 
-      return currentFavorite
-        ? RemoveFromFavMutation(product._id)
-        : AddToFavoritesMutation(product._id);
-    },
-    [
-      AddToFavoritesMutation,
-      RemoveFromFavMutation,
-      isFavorite,
-      toggleFavorite,
-      user?._id,
-    ],
-  );
-
-  return { handleUpdateFav, isFavorite };
+  return { handleUpdateFav, isFav };
 };
 
 export default useFavorites;
