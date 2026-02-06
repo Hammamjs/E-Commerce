@@ -17,6 +17,7 @@ const AppInitializer = () => {
   const setProducts = useProductsStore(
     useCallback((state) => state.setProducts, []),
   );
+
   const setCart = useCartStore(useCallback((state) => state.setCart, []));
   const setFavorites = useFavoriteStore(
     useCallback((state) => state.setFavorites, []),

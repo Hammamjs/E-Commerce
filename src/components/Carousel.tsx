@@ -8,10 +8,10 @@ import {
 import { Link } from 'react-router-dom';
 import CarouselProduct from './CarouselProduct';
 import { useProductsStore } from '@/stores/useProductsStore';
-import { memo, useCallback, useMemo } from 'react';
-import type { Product } from '@/types/product';
+import { memo, useMemo } from 'react';
+import { useShallow } from 'zustand/shallow';
 
-const shuffleArr = (products: Product[]) => {
+const shuffleArr = (products: string[]) => {
   const shuffled = [...products];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -21,8 +21,9 @@ const shuffleArr = (products: Product[]) => {
 };
 
 const ProductCarousel = () => {
-  const products = useProductsStore(useCallback((state) => state.products, []));
-  const featuredProducts = useMemo(() => shuffleArr(products), [products]);
+  const productIds = useProductsStore(useShallow((state) => state.productIds));
+
+  const featuredProducts = useMemo(() => shuffleArr(productIds), [productIds]);
 
   return (
     <section className="py-16 bg-gradient-accent px-10">
@@ -45,8 +46,8 @@ const ProductCarousel = () => {
           }}
         >
           <CarouselContent className="-ml-2 md:-ml-4">
-            {featuredProducts.map((product) => (
-              <CarouselProduct key={product._id} product={product} />
+            {featuredProducts.map((productId) => (
+              <CarouselProduct key={productId} productId={productId} />
             ))}
           </CarouselContent>
           <CarouselPrevious className="hidden md:flex -left-12 bg-background/80 backdrop-blur-sm border-border/50 hover:bg-primary hover:text-primary-foreground" />
