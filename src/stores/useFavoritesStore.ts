@@ -24,11 +24,11 @@ export const useFavoriteStore = create<Favorites>((set, get) => ({
       items: favorites,
     } = derivedState(products);
 
-    return {
+    return set({
       favoriteById,
       favoritesIds,
       favorites,
-    };
+    });
   },
   addToFavorites: (product) =>
     set((state) => {
@@ -44,7 +44,9 @@ export const useFavoriteStore = create<Favorites>((set, get) => ({
         favoritesIds,
       };
     }),
+
   isFavorite: (productId) => !!get().favoriteById[productId],
+
   removeFromFavorites: (productId) =>
     set((state) => {
       const removedFav = state.favorites.filter((f) => f._id != productId);
