@@ -1,7 +1,7 @@
 import type { Product } from './product';
 
 export type CartEntry = {
-  name?: 'Mechanical Gaming Keyboard';
+  name?: string;
   price?: number;
   product: Product;
   quantity?: number;

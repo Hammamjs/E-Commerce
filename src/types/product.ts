@@ -38,7 +38,6 @@ export interface Review {
 
 export interface ProductReviewsProps {
   productId: string;
-  onAddReview: (rating: number, comment: string) => void;
 }
 
 export type ExcludeProductId = Omit<Product, '_id'>;

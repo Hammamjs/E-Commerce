@@ -1,6 +1,6 @@
-import type { CartEntry } from '@/types/Cart';
+import type { Cart, CartEntry } from '@/types/Cart';
 import { createInstance, apiEndPoint } from './BaseUrl';
-import type { Product } from '@/types/product';
+import type { CartItem, Product } from '@/types/product';
 
 export const addToCartApi = async ({ cart }: { cart: CartEntry }) => {
   const response = await createInstance.post(apiEndPoint + '/cart', {
@@ -12,9 +12,12 @@ export const addToCartApi = async ({ cart }: { cart: CartEntry }) => {
 
 export const getUserCart = async () => {
   // Cart id
-  const response = await createInstance.get(apiEndPoint + '/cart/user', {
-    withCredentials: true,
-  });
+  const response = await createInstance.get<{ data: { items: CartEntry[] } }>(
+    apiEndPoint + '/cart/user',
+    {
+      withCredentials: true,
+    },
+  );
 
   return response.data;
 };
@@ -28,7 +31,7 @@ export const updateCart = async ({
 }) => {
   const response = await createInstance.put(
     apiEndPoint + `/cart/${items._id}`,
-    { items: { ...items, quantity } }
+    { items: { ...items, quantity } },
   );
 
   return response.data;
@@ -36,7 +39,7 @@ export const updateCart = async ({
 
 export const deleteProductFromCart = async (productId: string) => {
   const response = await createInstance.patch(
-    apiEndPoint + `/cart/${productId}`
+    apiEndPoint + `/cart/${productId}`,
   );
 
   return response;
@@ -47,3 +50,5 @@ export const deleteCart = async (id: string) => {
 
   return response;
 };
+
+export type UserCartResult = Awaited<ReturnType<typeof getUserCart>>;
