@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getUserCart } from '@/api/CartApi';
+import { getUserCart, type UserCartResult } from '@/api/CartApi';
 import { useCartStore } from '@/stores/useCartStore';
 import { getAllProducts } from '@/api/ProductsApi';
 import { useProductsStore } from '@/stores/useProductsStore';
@@ -10,6 +10,18 @@ import { useFavoriteStore } from '@/stores/useFavoritesStore';
 import { getAllCategories } from '@/api/CategoriesApi';
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import { useCallback, useEffect } from 'react';
+import type { Categories } from '@/types/Categories';
+
+type initData = {
+  products: Product[];
+  cart: UserCartResult['data'];
+  favorites: Product[];
+  categories: Categories[];
+};
+
+const emptyCart: UserCartResult = {
+  data: { items: [] },
+};
 
 const AppInitializer = () => {
   const user = useUserStore(useCallback((state) => state.user, []));
@@ -26,7 +38,7 @@ const AppInitializer = () => {
     useCallback((state) => state.setCategories, []),
   );
 
-  const { data, isSuccess } = useQuery({
+  const { data, isSuccess } = useQuery<initData>({
     queryKey: ['initData'],
     queryFn: async () => {
       const [productsRes, categoriesRes, cartRes, favoritesRes] =
@@ -34,9 +46,7 @@ const AppInitializer = () => {
           getAllProducts(),
           getAllCategories(),
 
-          user?.username
-            ? getUserCart()
-            : Promise.resolve({ data: { items: [] } }),
+          user?.username ? getUserCart() : Promise.resolve(emptyCart),
 
           user?.username
             ? getUserFavoritesApi()
@@ -62,7 +72,7 @@ const AppInitializer = () => {
     if (isSuccess && data) {
       setProducts(data.products);
       setCategories(data.categories);
-      setCart(data?.cart);
+      setCart(data.cart);
       setFavorites(data.favorites);
     }
   }, [isSuccess, data, setProducts, setCategories, setCart, setFavorites]);
