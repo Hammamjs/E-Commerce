@@ -1,22 +1,21 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useFavoriteStore } from '@/stores/useFavoritesStore';
 import { useShallow } from 'zustand/shallow';
 import { useProductsStore } from '@/stores/useProductsStore';
 import useCart from '@/hooks/use-cart';
 import type { Product, Review } from '@/types/product';
 import { useUserStore } from '@/stores/useUserStore';
-import { useReviewStore } from '@/stores/useReviewsStore';
 import { toast } from './use-toast';
+import { useReviewStore } from '@/stores/reviews/useReviewsStore';
 
-const useProductDetails = () => {
-  const { id } = useParams();
-
+const useProductDetails = (id: string) => {
   const product = useProductsStore(
-    useShallow((state) => state.getProduct(id!))
+    useShallow((state) => state.getProduct(id)),
   ) as Product;
 
-  const products = useProductsStore(useShallow((state) => state.products));
+  const products = useProductsStore(
+    useShallow((state) => state.getProduct(id)),
+  );
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -25,15 +24,15 @@ const useProductDetails = () => {
     useShallow((state) => ({
       toggleFavorite: state.toggleFavorite,
       isFavorite: state.isFavorite,
-    }))
+    })),
   );
 
-  const { handleAddOrUpdateCart } = useCart();
+  const { handleAddOrUpdateCart } = useCart(id);
 
   const { addReview } = useReviewStore(
     useShallow((state) => ({
       addReview: state.addReview,
-    }))
+    })),
   );
 
   // reviewer section
@@ -76,7 +75,7 @@ const useProductDetails = () => {
     isFavorite,
     handleAddOrUpdateCart,
     handleAddReview,
-
+    user,
     product,
   };
 };
