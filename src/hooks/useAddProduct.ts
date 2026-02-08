@@ -1,7 +1,7 @@
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { productSchema, type ProductFormData } from '@/schema/ProductSchema';
-import { useCallback, useEffect, useReducer, type ChangeEvent } from 'react';
+import { useEffect, type ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUserStore } from '@/stores/useUserStore';
@@ -10,17 +10,19 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AddProduct } from '@/api/ProductsApi';
 import type { AddProductType } from '@/types/product';
 import { useShallow } from 'zustand/shallow';
-import {
-  AddProductInitialState,
-  AddProductReducer,
-} from '@/reducer/add-product.reducer';
 import handleError from '@/utils/ErrorHandler';
+import {
+  useAddProductState,
+  type TrackInput,
+} from '@/stores/addProduct/useAddProductState';
 
 const useAddProduct = () => {
-  const [state, dispatch] = useReducer(
-    AddProductReducer,
-    AddProductInitialState,
-  );
+  const formState = useAddProductState((state) => state.form);
+  const addToArray = useAddProductState((state) => state.addToArray);
+  const updateInArray = useAddProductState((state) => state.updateInArray);
+  const removeFromArray = useAddProductState((state) => state.removeFromArray);
+  const setInput = useAddProductState((state) => state.setUserInput);
+
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -43,14 +45,19 @@ const useAddProduct = () => {
       discountPrice: 0,
     },
   });
-  useEffect(() => {
-    const cleanedImages = state.images.map((img) => img.trim()).filter(Boolean);
 
-    const cleanedFeatures = state.features.map((f) => f.trim()).filter(Boolean);
+  useEffect(() => {
+    const cleanedImages = formState.images
+      .map((img) => img.trim())
+      .filter(Boolean);
+
+    const cleanedFeatures = formState.features
+      .map((f) => f.trim())
+      .filter(Boolean);
 
     form.setValue('images', cleanedImages, { shouldValidate: true });
     form.setValue('features', cleanedFeatures, { shouldValidate: true });
-  }, [state.images, state.features]);
+  }, [formState.images, formState.features]);
 
   const queryClient = useQueryClient();
   const { mutate: AddProductMutation } = useMutation({
@@ -66,8 +73,11 @@ const useAddProduct = () => {
     onError: (err) => handleError(err),
   });
 
-  const handleColorOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'SET_COLOR', payload: e.target.value });
+  const handleInputOnChange = (
+    input: TrackInput,
+    e: ChangeEvent<HTMLInputElement>,
+  ) => {
+    setInput(input, e.target.value);
   };
 
   const onSubmit = async (data: ProductFormData) => {
@@ -84,8 +94,8 @@ const useAddProduct = () => {
         count: 0,
       },
       attributes: {
-        colors: state.colors,
-        size: state.size,
+        colors: formState.colors,
+        size: formState.size,
       },
     };
 
@@ -99,12 +109,14 @@ const useAddProduct = () => {
   };
 
   return {
-    state,
-    dispatch,
+    formState,
+    addToArray,
+    updateInArray,
+    removeFromArray,
     form,
     navigate,
     categories,
-    handleColorOnChange,
+    handleInputOnChange,
     AddProductMutation,
     onSubmit,
   };
