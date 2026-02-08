@@ -1,6 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
-import type { Product } from '@/types/product';
 import { memo } from 'react';
 import { Button } from './ui/button';
 import { Link } from 'react-router-dom';
@@ -9,7 +8,6 @@ interface CategoryListProps {
   name: string;
   image: string;
   index: number;
-  products: Product[];
 }
 const CategoryList = ({ name, image, index }: CategoryListProps) => {
   return (

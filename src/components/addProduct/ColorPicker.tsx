@@ -1,0 +1,36 @@
+import { Input } from '@/components/ui/input';
+import useAddProduct from '@/hooks/useAddProduct';
+
+const ColorPicker = () => {
+  const { formState, addToArray, removeFromArray } = useAddProduct();
+
+  return (
+    <>
+      <h3>Pick a color</h3>
+      <div className="grid grid-cols-1 items-center gap-2">
+        <div>
+          <Input
+            type="color"
+            className="w-16 h-10 p-1 rounded cursor-pointer"
+            value={formState.selectedColor}
+            onChange={(e) => addToArray('colors', e.target.value)}
+          />
+        </div>
+
+        <div className="mt-4 flex gap-2">
+          {formState.colors.map((color, idx) => (
+            <div
+              key={color}
+              className="w-6 h-6 shadow-[0_0_10px_rgba(255,255,255,0.3)] bg-black text-white p-4 rounded cursor-pointer"
+              style={{ backgroundColor: color }}
+              title={color}
+              onClick={() => removeFromArray('colors', idx)}
+            />
+          ))}
+        </div>
+      </div>
+    </>
+  );
+};
+ColorPicker.displayName = 'ColorPicker';
+export default ColorPicker;
