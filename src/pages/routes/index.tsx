@@ -30,7 +30,7 @@ const Cart = lazy(() => import('@/pages/Cart'));
 const Orders = lazy(() => import('@/pages/Orders'));
 const EditProduct = lazy(() => import('@/pages/EditProduct'));
 const Favorites = lazy(() => import('@/pages/Favorites'));
-const AddProduct = lazy(() => import('@/pages/AddProduct'));
+const AddProductPage = lazy(() => import('@/pages/AddProductPage'));
 const AdminProducts = lazy(() => import('@/pages/AdminProducts'));
 
 export const routes: RouteObject[] = [
@@ -122,7 +122,7 @@ export const routes: RouteObject[] = [
           },
           {
             path: '/add-product',
-            element: <AddProduct />,
+            element: <AddProductPage />,
           },
           {
             path: '/edit-product/:id',
