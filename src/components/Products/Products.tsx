@@ -1,11 +1,11 @@
-import { Input } from '@/components/ui/input';
+import ProductsGrid from './ProductsGrid';
+import ActiveFilterBadges from './ActiveFilterBadges';
+import FilterSidebarWrapper from './FilterSidebarWrapper';
 import useProduct from '@/hooks/use-product';
-import FilterSidebar from '@/components/FilterSidebar';
-import useFilter from '@/hooks/use-filter';
 import { useMemo } from 'react';
-import FilterSidebarWrapper from '@/components/FilterSidebarWrapper';
-import ActiveFilterBadges from '@/components/ActiveFilterBadges';
-import ProductsGrid from '@/components/ProductsGrid';
+import useFilter from '@/hooks/use-filter';
+import FilterSidebar from './FilterSidebar';
+import { Input } from '../ui/input';
 
 const Products = () => {
   const { filteredProducts, filters, searchTerm, setSearchTerm, setFilters } =
