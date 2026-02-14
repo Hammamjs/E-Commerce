@@ -1,17 +1,11 @@
-import CustomFieldText from '../CustomFieldText';
-import CustomFormFiled from '../CustomFormFiled';
+import CustomFieldText from '../shared/CustomTextInput';
 import Size from './Size';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '../ui/form';
-import { Textarea } from '../ui/textarea';
 import type { UseFormReturn } from 'react-hook-form';
 import type { ProductFormData } from '@/schema/ProductSchema';
-import ProductFormField from './ProductFormField';
+import ProductFormField from '../shared/CategoriesDropdown';
+import CustomTextInput from '../shared/CustomTextInput';
+import CustomNumberInput from '../shared/CustomNumberInput';
+import CustomTextarea from '../shared/CustomTextarea';
 
 type AddProductCustomProps = {
   form: UseFormReturn<ProductFormData>;
@@ -21,26 +15,34 @@ const AddProductCustomInput = ({ form }: AddProductCustomProps) => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <CustomFieldText form={form} name="name" />
+        <CustomTextInput
+          control={form.control}
+          name="name"
+          labelname="product"
+          placeholder="Enter Product name"
+        />
 
-        <CustomFieldText form={form} name="brand" placeholder="Enter brand" />
+        <CustomFieldText
+          control={form.control}
+          name="brand"
+          labelname="brnd"
+          placeholder="Enter brand"
+        />
 
-        <CustomFormFiled
-          form={form}
-          type="number"
+        <CustomNumberInput
+          control={form.control}
           label="Price ($)"
           name="price"
         />
 
-        <CustomFormFiled
-          form={form}
-          type="number"
+        <CustomNumberInput
+          control={form.control}
           name="discountPrice"
           label="Discount Price ($) - Optional"
         />
-        <CustomFormFiled
-          form={form}
-          type="number"
+
+        <CustomNumberInput
+          control={form.control}
           name="inStock"
           label="Stock Quantity"
         />
@@ -48,23 +50,7 @@ const AddProductCustomInput = ({ form }: AddProductCustomProps) => {
         <Size />
         <ProductFormField form={form} />
       </div>
-      <FormField
-        control={form.control}
-        name="description"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Description</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Enter detailed product description"
-                className="min-h-[120px]"
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <CustomTextarea control={form.control} />
     </>
   );
 };

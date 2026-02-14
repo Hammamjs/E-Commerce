@@ -2,7 +2,7 @@ import { FormProvider } from 'react-hook-form';
 import AddProductCustomInput from './AddProductCustomInput';
 import AddButton from './AddButton';
 import ColorPicker from './ColorPicker';
-import ProductArrayString from './FormStringArrayField';
+import ProductArrayString from '../shared/FormStringArrayField';
 
 const AddProductForm = ({ form, onSubmit }: { form: any; onSubmit: any }) => {
   return (
