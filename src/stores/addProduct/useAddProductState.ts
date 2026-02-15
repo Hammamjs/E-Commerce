@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type State = {
+export type State = {
   features: string[];
   images: string[];
   colors: string[];
@@ -15,10 +15,10 @@ export type ArrayField = {
 
 export type TrackInput = keyof Pick<State, 'selectedColor' | 'typedSize'>;
 
-type AddProductStore = {
+export type AddProductStore = {
   form: State;
   resetForm: () => void;
-  addToArray: (field: ArrayField, value: string) => void;
+  addToArray: (field: ArrayField, value: string | string[]) => void;
   updateInArray: (field: ArrayField, value: string, idx: number) => void;
   removeFromArray: (field: ArrayField, idx: number) => void;
   setUserInput: (field: TrackInput, input: string) => void;
