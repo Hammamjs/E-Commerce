@@ -1,9 +1,9 @@
-import { useFavoriteStore } from '@/stores/useFavoritesStore';
+import { useFavoriteStore } from '@/stores/favorites/useFavoritesStore';
 import type { Product } from '@/types/product';
 import { useShallow } from 'zustand/shallow';
 import { toast } from './use-toast';
 import { useCallback } from 'react';
-import { useUserStore } from '@/stores/useUserStore';
+import { useUserStore } from '@/stores/user/useUserStore';
 import { favoritesCommands } from '@/features/favorites/command/favorite.command';
 
 const useFavorites = (product: Product) => {

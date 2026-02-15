@@ -5,7 +5,7 @@ import type { OrdersType } from '@/types/Orders';
 import { useOrdersStore } from '@/stores/useOrderStore';
 import { useShallow } from 'zustand/shallow';
 import { useNavigate } from 'react-router-dom';
-import { useUserStore } from '@/stores/useUserStore';
+import { useUserStore } from '@/stores/user/useUserStore';
 import { useToast } from './use-toast';
 import { createOrder } from '@/api/PaymentApi';
 import { loadStripe } from '@stripe/stripe-js';
@@ -25,7 +25,7 @@ const useOrders = ({ id }: { id?: string }) => {
     useShallow((state) => ({
       setOrders: state.setOrders,
       orders: state.orders,
-    }))
+    })),
   );
 
   useEffect(() => {

@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useFavoriteStore } from '@/stores/useFavoritesStore';
+import { useFavoriteStore } from '@/stores/favorites/useFavoritesStore';
 import { useShallow } from 'zustand/shallow';
-import { useProductsStore } from '@/stores/useProductsStore';
+import { useProductsStore } from '@/stores/product/useProductsStore';
 import useCart from '@/hooks/use-cart';
 import type { Product, Review } from '@/types/product';
-import { useUserStore } from '@/stores/useUserStore';
+import { useUserStore } from '@/stores/user/useUserStore';
 import { toast } from './use-toast';
 import { useReviewStore } from '@/stores/reviews/useReviewsStore';
 
@@ -13,9 +13,7 @@ const useProductDetails = (id: string) => {
     useShallow((state) => state.getProduct(id)),
   ) as Product;
 
-  const products = useProductsStore(
-    useShallow((state) => state.getProduct(id)),
-  );
+  const productIds = useProductsStore(useShallow((state) => state.productIds));
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -66,7 +64,7 @@ const useProductDetails = (id: string) => {
   };
 
   return {
-    products,
+    productIds,
     selectedImage,
     setSelectedImage,
     quantity,

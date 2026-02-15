@@ -1,39 +1,28 @@
-import {
-  useCallback,
-  useEffect,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from './use-toast';
 import { productSchema, type ProductFormData } from '@/schema/ProductSchema';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useProductsStore } from '@/stores/useProductsStore';
+import { useProductsStore } from '@/stores/product/useProductsStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateProduct } from '@/api/ProductsApi';
 import type { ExcludeProductId } from '@/types/product';
 import handleError from '@/utils/ErrorHandler';
+import { useUiStore } from '@/stores/useUiStore';
 
-interface UseEditProductProps {
-  features: string[];
-  images: string[];
-  setFeatures: Dispatch<SetStateAction<string[]>>;
-  setImages: Dispatch<SetStateAction<string[]>>;
-}
-
-const useEditProduct = ({
-  features,
-  images,
-  setFeatures,
-  setImages,
-}: UseEditProductProps) => {
+const useEditProduct = () => {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
   const [productFound, setProductFound] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const formState = useUiStore((state) => state.addProduct.form);
+  const addToArray = useUiStore((state) => state.addProduct.addToArray);
+  const removeFromArray = useUiStore(
+    (state) => state.addProduct.removeFromArray,
+  );
 
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
@@ -85,12 +74,8 @@ const useEditProduct = ({
             inStock: product.inStock,
           });
 
-          setFeatures(product.features.length > 0 ? product.features : ['']);
-          setImages(
-            product.images && product.images.length > 0
-              ? product.images
-              : [product.image]
-          );
+          addToArray('features', [...product.features]);
+          addToArray('images', [...(product.images ?? product.image)]);
         } else {
           setProductFound(false);
           toast({
@@ -111,15 +96,15 @@ const useEditProduct = ({
     if (!id) return;
 
     console.log(data);
-    if (!images.length) {
+    if (!formState.images.length) {
       toast({ title: 'Images are required' });
       return;
     }
     const productData = {
       ...data,
-      image: images[0],
-      features: features.filter((f) => f.trim() !== ''),
-      images: images.filter((img) => img.trim() !== ''),
+      image: formState.images[0],
+      features: formState.features.filter((f) => f.trim() !== ''),
+      images: formState.images.filter((img) => img.trim() !== ''),
     };
 
     updateProductMutation({
@@ -130,6 +115,8 @@ const useEditProduct = ({
 
   return {
     form,
+    addToArray,
+    removeFromArray,
     loading,
     productFound,
     onSubmit,

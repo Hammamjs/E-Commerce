@@ -2,7 +2,7 @@ import { Reviewscommand } from '@/features/reviews/command/reviews.command';
 import { ReviewsQuery } from '@/features/reviews/query/reviews.query';
 import useReviewFormState from '@/stores/reviews/useReviewFormState';
 import { useReviewStore } from '@/stores/reviews/useReviewsStore';
-import { useUserStore } from '@/stores/useUserStore';
+import { useUserStore } from '@/stores/user/useUserStore';
 import type { ProductReviewsProps } from '@/types/product';
 import { useEffect } from 'react';
 

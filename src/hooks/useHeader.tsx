@@ -1,7 +1,7 @@
 import { logout } from '@/api/UserApi';
-import { useCartStore } from '@/stores/useCartStore';
-import { useFavoriteStore } from '@/stores/useFavoritesStore';
-import { useUserStore } from '@/stores/useUserStore';
+import { useCartStore } from '@/stores/cart/useCartStore';
+import { useFavoriteStore } from '@/stores/favorites/useFavoritesStore';
+import { useUserStore } from '@/stores/user/useUserStore';
 import { clearLocalstorage } from '@/utils/LocalStorage';
 import { useCallback, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -10,7 +10,7 @@ const useHeader = () => {
   const location = useLocation();
   const totalItems = useCartStore((state) => state.cart).items.length;
   const favorites = useFavoriteStore(
-    (state) => Object.entries(state.favorites).filter((fav) => fav[1]).length,
+    (state) => Object.entries(state.items).filter((fav) => fav[1]).length,
   );
   const user = useUserStore((state) => state.user);
   const [isOpen, setIsOpen] = useState(false);

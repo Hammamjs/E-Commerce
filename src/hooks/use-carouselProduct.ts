@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { toast } from './use-toast';
 import type { Product } from '@/types/product';
-import { useUserStore } from '@/stores/useUserStore';
+import { useUserStore } from '@/stores/user/useUserStore';
 import { useShallow } from 'zustand/shallow';
 
 interface UseProductCarousel {

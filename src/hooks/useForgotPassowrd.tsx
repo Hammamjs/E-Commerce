@@ -9,8 +9,7 @@ const useForgotPassowrd = () => {
   const [email, setEmail] = useState('');
   const [isEmailSent, setIsEmailSent] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsLoading(true);
     try {
       const response = await forgotPassword(email);

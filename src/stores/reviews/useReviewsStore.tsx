@@ -3,9 +3,9 @@ import { derivedState } from '@/utils/derivedState';
 import { create } from 'zustand';
 
 interface Reviews {
-  reviews: Review[];
-  reviewsById: Record<string, Review>;
-  reviewIds: string[];
+  items: Review[];
+  byId: Record<string, Review>;
+  ids: string[];
   getReview: (id: string) => Review;
   setReviews: (reviews: Review[]) => void;
   addReview: (newReview: Review) => void;
@@ -13,40 +13,40 @@ interface Reviews {
 }
 
 export const useReviewStore = create<Reviews>((set, get) => ({
-  reviews: [],
-  reviewIds: [],
-  reviewsById: {},
+  items: [],
+  ids: [],
+  byId: {},
   addReview: (newReview) =>
     set((state) => {
-      const reviews = [...state.reviews, newReview];
-      const { ids: reviewIds, map: reviewsById } = derivedState(reviews);
+      const reviews = [...state.items, newReview];
+      const { ids, map: byId, items } = derivedState(reviews);
       return {
-        reviews,
-        reviewIds,
-        reviewsById,
+        items,
+        ids,
+        byId,
       };
     }),
 
-  getReview: (id: string) => get().reviewsById[id],
+  getReview: (id: string) => get().byId[id],
 
   removeReview: (id) =>
     set((state) => {
-      const reviews = state.reviews.filter((review) => review._id !== id);
+      const reviews = state.items.filter((review) => review._id !== id);
 
-      const { ids: reviewIds, map: reviewsById } = derivedState(reviews);
+      const { ids, map: byId, items } = derivedState(reviews);
       return {
-        reviews,
-        reviewIds,
-        reviewsById,
+        ids,
+        byId,
+        items,
       };
     }),
   setReviews: (reviews) =>
     set(() => {
-      const { ids: reviewIds, map: reviewsById } = derivedState(reviews);
+      const { ids, map: byId, items } = derivedState(reviews);
       return {
-        reviews,
-        reviewIds,
-        reviewsById,
+        items,
+        ids,
+        byId,
       };
     }),
 }));

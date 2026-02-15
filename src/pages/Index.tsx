@@ -1,17 +1,5 @@
-import Hero from '@/components/Hero';
-import ProductGrid from '@/components/ProductGrid';
-import Features from '@/components/Features';
-import ProductCarousel from '@/components/Carousel';
+import { Home } from '@/components/Home';
 
-const Index = () => {
-  return (
-    <div className="min-h-screen bg-background mt-28">
-      <Hero />
-      <ProductCarousel />
-      <ProductGrid />
-      <Features />
-    </div>
-  );
-};
+const Index = () => <Home />;
 
 export default Index;
