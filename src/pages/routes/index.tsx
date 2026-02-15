@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import { createBrowserRouter, type RouteObject } from 'react-router-dom';
-import RequireAuth from '@/components/RequireAuth';
+import RequireAuth from '@/components/guard/RequireAuth';
 
 // Lazy layout
 
@@ -9,29 +9,29 @@ const LayoutWithoutNav = lazy(() => import('@/components/LayoutWithoutNav'));
 
 // Public routes
 const Index = lazy(() => import('@/pages/Index'));
-const Products = lazy(() => import('@/pages/Products'));
-const Categories = lazy(() => import('@/pages/Categories'));
-const CodeVerification = lazy(() => import('@/pages/CodeVerification'));
-const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
-const NewArrivals = lazy(() => import('@/pages/NewArrivals'));
-const BestSellers = lazy(() => import('@/pages/BestSellers'));
-const ProductDetail = lazy(() => import('@/pages/ProductDetail'));
-const SignUp = lazy(() => import('@/pages/SignUp'));
-const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'));
-const Login = lazy(() => import('@/pages/Login'));
-const AdminOrders = lazy(() => import('@/pages/AdminOrders'));
-const NotFound = lazy(() => import('@/pages/NotFound'));
+const Products = lazy(() => import('@/pages/ProductsPage'));
+const Categories = lazy(() => import('@/pages/CategoryPage'));
+const CodeVerification = lazy(() => import('@/pages/CodeVerificationPage'));
+const ResetPassword = lazy(() => import('@/pages/ResetPasswordPage'));
+const NewArrivals = lazy(() => import('@/pages/NewArrivalsPage'));
+const BestSellers = lazy(() => import('@/pages/BestSellersPage'));
+const ProductDetailPage = lazy(() => import('@/pages/ProductDetailPage'));
+const SignUp = lazy(() => import('@/pages/SignupPage'));
+const ForgotPassword = lazy(() => import('@/pages/ForgotPasswordPage'));
+const Login = lazy(() => import('@/pages/LoginPage'));
+const AdminOrders = lazy(() => import('@/pages/AdminOrdersPage'));
+const NotFound = lazy(() => import('@/pages/NotFoundPage'));
 
 // Protected Routes
-const PaymentFailed = lazy(() => import('@/pages/PaymentFailed'));
-const PaymentSuccess = lazy(() => import('@/pages/PaymentSuccess'));
-const Profile = lazy(() => import('@/pages/Profile'));
-const Cart = lazy(() => import('@/pages/Cart'));
-const Orders = lazy(() => import('@/pages/Orders'));
-const EditProduct = lazy(() => import('@/pages/EditProduct'));
-const Favorites = lazy(() => import('@/pages/Favorites'));
+const PaymentFailed = lazy(() => import('@/pages/PaymentFailedPage'));
+const PaymentSuccess = lazy(() => import('@/pages/PaymentSuccessPage'));
+const Profile = lazy(() => import('@/pages/ProfilePage'));
+const CartPage = lazy(() => import('@/pages/CartPage'));
+const Orders = lazy(() => import('@/pages/OrdersPage'));
+const EditProduct = lazy(() => import('@/pages/EditProductPage'));
+const Favorites = lazy(() => import('@/pages/FavoritesPage'));
 const AddProductPage = lazy(() => import('@/pages/AddProductPage'));
-const AdminProducts = lazy(() => import('@/pages/AdminProducts'));
+const AdminProductsPage = lazy(() => import('@/pages/AdminProductsPage'));
 
 export const routes: RouteObject[] = [
   {
@@ -52,7 +52,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: '/product-details/:id',
-        element: <ProductDetail />,
+        element: <ProductDetailPage />,
       },
       {
         path: '/new-arrivals',
@@ -110,7 +110,7 @@ export const routes: RouteObject[] = [
           },
           {
             path: '/cart',
-            element: <Cart />,
+            element: <CartPage />,
           },
           {
             path: '/orders',
@@ -130,7 +130,7 @@ export const routes: RouteObject[] = [
           },
           {
             path: '/dashboard/admin-products',
-            element: <AdminProducts />,
+            element: <AdminProductsPage />,
           },
         ],
       },
