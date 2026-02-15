@@ -1,6 +1,6 @@
-import { useFavoriteStore } from '@/stores/useFavoritesStore';
-import { useCartStore } from '@/stores/useCartStore';
-import { useUserStore } from '@/stores/useUserStore';
+import { useFavoriteStore } from '@/stores/favorites/useFavoritesStore';
+import { useCartStore } from '@/stores/cart/useCartStore';
+import { useUserStore } from '@/stores/user/useUserStore';
 import { useMutation } from '@tanstack/react-query';
 import {
   updateUserData,
@@ -21,7 +21,7 @@ const useProfile = () => {
       user: state.user,
       updateUser: state.updateUser,
       validate: state.validate,
-    }))
+    })),
   );
   const cart = useCartStore((state) => state.cart);
   const favorites = useFavoriteStore((state) => state.favorites);
@@ -95,18 +95,6 @@ const useProfile = () => {
       updateUserPassowrdMutation(data);
     }
   };
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Delivered':
-        return 'bg-green-500 text-white';
-      case 'Processing':
-        return 'bg-yellow-500 text-white';
-      case 'Shipped':
-        return 'bg-blue-500 text-white';
-      default:
-        return 'bg-gray-500 text-white';
-    }
-  };
 
   return {
     cart,
@@ -118,7 +106,6 @@ const useProfile = () => {
     handleOnImageChange,
     handleUpdateUser,
     handleUpdateUserPassword,
-    getStatusColor,
     updateUser,
     user,
     staticEndpoint,

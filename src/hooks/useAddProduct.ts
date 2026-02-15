@@ -4,7 +4,7 @@ import { productSchema, type ProductFormData } from '@/schema/ProductSchema';
 import { useEffect, type ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useUserStore } from '@/stores/useUserStore';
+import { useUserStore } from '@/stores/user/useUserStore';
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AddProduct } from '@/api/ProductsApi';

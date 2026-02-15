@@ -1,11 +1,11 @@
 import { addToLocalstorage } from '@/utils/LocalStorage';
-import { useCartStore } from '@/stores/useCartStore';
+import { useCartStore } from '@/stores/cart/useCartStore';
 import { useShallow } from 'zustand/shallow';
 import { useCallback, useEffect, useMemo } from 'react';
-import { useUserStore } from '@/stores/useUserStore';
+import { useUserStore } from '@/stores/user/useUserStore';
 import userCartCommand from '../features/cart/command/userCommand';
 import { toast } from './use-toast';
-import { useProductsStore } from '@/stores/useProductsStore';
+import { useProductsStore } from '@/stores/product/useProductsStore';
 
 const useCart = (productId: string) => {
   const {

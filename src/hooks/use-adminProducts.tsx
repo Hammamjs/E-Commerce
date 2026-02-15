@@ -1,7 +1,7 @@
 import handleError from '@/utils/ErrorHandler';
 import { toast } from './use-toast';
 import { useMemo, useState } from 'react';
-import { useProductsStore } from '@/stores/useProductsStore';
+import { useProductsStore } from '@/stores/product/useProductsStore';
 import { useMutation } from '@tanstack/react-query';
 import { deleteProduct } from '@/api/ProductsApi';
 import { useQueryClient } from '@tanstack/react-query';
@@ -17,7 +17,7 @@ const useAdminProducts = () => {
       product.name
         .toLowerCase()
         .split(' ')
-        .some((prod) => prod.includes(searchKey.toLowerCase()))
+        .some((prod) => prod.includes(searchKey.toLowerCase())),
     );
   }, [searchKey]);
 

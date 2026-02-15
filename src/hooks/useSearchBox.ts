@@ -1,16 +1,16 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
-import { useProductsStore } from '@/stores/useProductsStore';
+import { useProductsStore } from '@/stores/product/useProductsStore';
 
 const useSearchBox = () => {
   const [search, setSearch] = useState<string>('');
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
     setSearch(e.target.value);
 
-  const products = useProductsStore((state) => state.products);
+  const products = useProductsStore((state) => state.items);
 
   const filterSrearch = useMemo(() => {
     return products.filter((product) =>
-      product.name.toLowerCase().includes(search.toLowerCase())
+      product.name.toLowerCase().includes(search.toLowerCase()),
     );
   }, [search]);
 

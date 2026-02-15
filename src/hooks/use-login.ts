@@ -1,5 +1,5 @@
 import { LogUserIn } from '@/api/UserApi';
-import { useUserStore } from '@/stores/useUserStore';
+import { useUserStore } from '@/stores/user/useUserStore';
 import { toast } from 'sonner';
 import axios from 'axios';
 
@@ -36,8 +36,7 @@ const useLogin = () => {
   const navigate = useNavigate();
   const from = location.state?.from || '/';
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsLoading(true);
 
     // Api call

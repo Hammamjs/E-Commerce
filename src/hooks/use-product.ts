@@ -1,4 +1,4 @@
-import { useProductsStore } from '@/stores/useProductsStore';
+import { useProductsStore } from '@/stores/product/useProductsStore';
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import type { FilterState } from '@/types/product';
@@ -16,7 +16,7 @@ const useProduct = () => {
     inStock: false,
   });
 
-  const products = useProductsStore((state) => state.products);
+  const products = useProductsStore((state) => state.items);
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -24,7 +24,7 @@ const useProduct = () => {
       // it just return beauty with uppercase
       // this code fix this issue if there is no word that matched
       filters.categories = filters.categories?.map((category) =>
-        category.trim().toLowerCase()
+        category.trim().toLowerCase(),
       );
 
       const matchesSearch =

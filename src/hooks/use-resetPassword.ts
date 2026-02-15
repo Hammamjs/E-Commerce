@@ -26,8 +26,7 @@ const useResetPassowrd = () => {
     return;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     checkEmailsExist();
     if (password !== confirmPassword) {
       return;

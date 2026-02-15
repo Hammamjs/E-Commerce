@@ -1,5 +1,5 @@
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
-import { useProductsStore } from '@/stores/useProductsStore';
+import { useProductsStore } from '@/stores/product/useProductsStore';
 import type { FilterState } from '@/types/product';
 import { sliceBrand } from '@/utils/SliceBrand';
 import { useEffect, useState } from 'react';
@@ -13,7 +13,7 @@ const useFilter = ({ filters, setFilters }: UseFilterProps) => {
   const [brands, setBrands] = useState<string[]>([]);
 
   const categories = useCategoriesStore((state) => state.categories);
-  const products = useProductsStore((state) => state.products);
+  const products = useProductsStore((state) => state.items);
 
   useEffect(() => {
     setBrands(sliceBrand(products));
@@ -25,7 +25,7 @@ const useFilter = ({ filters, setFilters }: UseFilterProps) => {
 
   const toggleCategoryFilter = (categoryName: string) => {
     filters.categories = filters.categories.map((category) =>
-      category.trim().toLowerCase()
+      category.trim().toLowerCase(),
     );
     const newCategories = filters.categories.includes(categoryName)
       ? filters.categories.filter((c) => c !== categoryName)
