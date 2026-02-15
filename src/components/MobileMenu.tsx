@@ -85,7 +85,7 @@ const RouteLink = memo(
         {link.name}
       </Link>
     );
-  }
+  },
 );
 
 const MobileMenu = ({ isActive }: { isActive: (path: string) => boolean }) => {

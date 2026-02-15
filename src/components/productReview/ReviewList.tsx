@@ -1,6 +1,6 @@
 import { Card, CardContent } from '../ui/card';
 import { ReviewItem } from './index';
-import { useUserStore } from '@/stores/useUserStore';
+import { useUserStore } from '@/stores/user/useUserStore';
 
 type ReviwesListProps = {
   reviewIds: string[];

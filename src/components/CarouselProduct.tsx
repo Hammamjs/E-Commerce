@@ -8,7 +8,7 @@ import useCart from '@/hooks/use-cart';
 import useFavorites from '@/hooks/use-favorites';
 import useProductCarousel from '@/hooks/use-carouselProduct';
 import CustomImage from './shared/customImg';
-import { useProductsStore } from '@/stores/useProductsStore';
+import { useProductsStore } from '@/stores/product/useProductsStore';
 
 const CarouselProduct = ({ productId }: { productId: string }) => {
   const { handleAddOrUpdateCart } = useCart(productId);

@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { getUserCart, type UserCartResult } from '@/api/CartApi';
-import { useCartStore } from '@/stores/useCartStore';
+import { useCartStore } from '@/stores/cart/useCartStore';
 import { getAllProducts } from '@/api/ProductsApi';
-import { useProductsStore } from '@/stores/useProductsStore';
+import { useProductsStore } from '@/stores/product/useProductsStore';
 import type { Product } from '@/types/product';
-import { useUserStore } from '@/stores/useUserStore';
+import { useUserStore } from '@/stores/user/useUserStore';
 import { getUserFavoritesApi } from '@/api/FavoritesApi';
-import { useFavoriteStore } from '@/stores/useFavoritesStore';
+import { useFavoriteStore } from '@/stores/favorites/useFavoritesStore';
 import { getAllCategories } from '@/api/CategoriesApi';
 import { useCategoriesStore } from '@/stores/useCategoriesStore';
 import { useCallback, useEffect } from 'react';
