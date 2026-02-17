@@ -1,54 +1,28 @@
-import { addReview, removeReview, updateReview } from '@/api/Reviews';
-import type { Review } from '@/types/product';
-import handleError from '@/utils/ErrorHandler';
 import {
-  useMutation,
-  type QueryObserverResult,
-  type RefetchOptions,
-} from '@tanstack/react-query';
+  addReviewApi,
+  removeReviewApi,
+  updateReviewApi,
+} from '@/features/reviews/api/Reviews';
+import type { Review } from '@/types/product';
+import { useBaseMutation } from '@/shared/lib/react-query/useBaseMutation';
 
-type ReviewCommandType<TOptions, TResult> = {
-  refetch: (option?: TOptions) => Promise<TResult>;
-};
-
-type ReviewRefetchCommand = ReviewCommandType<
-  RefetchOptions,
-  QueryObserverResult<Review[], Error>
->;
-
-export const Reviewscommand = ({ refetch }: ReviewRefetchCommand) => {
-  const AddReviewCommand = useMutation({
-    mutationKey: ['add-review'],
-    mutationFn: addReview,
-    onSuccess: () => {
-      refetch();
-    },
-    onError: (err) => handleError(err, 'reviews'),
+export const addReviewMutation = () =>
+  useBaseMutation<void, Omit<Review, 'createdAt' | '_id'>>({
+    mutationFn: addReviewApi,
+    invalidatedKeys: ['add-review'],
+    successMessage: 'Review added successfully',
   });
 
-  const updateRevieCommand = useMutation({
-    mutationKey: ['update-review'],
-    mutationFn: updateReview,
-    onSuccess: (data) => {
-      refetch();
-      console.log('Review Added successfully');
-      console.log(data);
-    },
-    onError: (err) => {
-      console.log(err);
-    },
+export const updateReviewMutation = () =>
+  useBaseMutation<void, Pick<Review, 'comment' | 'rating' | '_id'>>({
+    mutationFn: updateReviewApi,
+    invalidatedKeys: ['update-review'],
+    successMessage: 'Review updated',
   });
 
-  const removeReviewCommand = useMutation({
-    mutationKey: ['remove-review'],
-    mutationFn: removeReview,
-    onSuccess: () => refetch(),
-    onError: handleError,
+export const removeReviewMutation = () =>
+  useBaseMutation<void, string>({
+    mutationFn: removeReviewApi,
+    invalidatedKeys: ['remove-review'],
+    successMessage: 'Review deleted successfully',
   });
-
-  return {
-    AddReviewCommand,
-    updateRevieCommand,
-    removeReviewCommand,
-  };
-};
