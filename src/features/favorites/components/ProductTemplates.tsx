@@ -1,8 +1,8 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import useCart from '@/hooks/use-cart';
-import useFavorites from '@/hooks/use-favorites';
+import useCart from '@/features/cart/hooks/useCart';
+import useFavorites from '@/features/favorites/hooks/useFavorites';
 import { useStore } from '@/stores/useStore';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { memo } from 'react';

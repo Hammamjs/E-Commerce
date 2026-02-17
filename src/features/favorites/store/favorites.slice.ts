@@ -1,7 +1,7 @@
 import type { StateCreator } from 'zustand';
 import type { Product } from '@/types/product';
-import { derivedState } from '@/utils/derivedState';
-import type { storeState } from '../useStore';
+import { derivedState } from '@/shared/utils/derivedState';
+import type { storeState } from '../../../stores/useStore';
 
 export type FavoritesSlice = {
   byId: Record<string, Product>;

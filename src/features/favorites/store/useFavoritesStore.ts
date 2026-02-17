@@ -1,5 +1,5 @@
 import type { Product } from '@/types/product';
-import { derivedState } from '@/utils/derivedState';
+import { derivedState } from '@/shared/utils/derivedState';
 import { create } from 'zustand';
 
 type Favorites = {

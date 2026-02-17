@@ -1,4 +1,4 @@
-import { createInstance, apiEndPoint } from './BaseUrl';
+import { createInstance, apiEndPoint } from '../../../api/BaseUrl';
 
 export const addToFavoritesApi = async (product: string) => {
   const response = await createInstance.post(apiEndPoint + '/favorites', {
@@ -14,7 +14,7 @@ export const getUserFavoritesApi = async () => {
   return response.data;
 };
 
-export const removeFromFav = async (productId: string) => {
+export const removeFromFavApi = async (productId: string) => {
   const response = await createInstance.patch(apiEndPoint + '/favorites', {
     productId,
   });

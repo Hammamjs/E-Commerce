@@ -1,34 +1,19 @@
-import { addToFavoritesApi, removeFromFav } from '@/api/FavoritesApi';
-import { toast } from '@/hooks/use-toast';
-import handleError from '@/utils/ErrorHandler';
-import { useMutation } from '@tanstack/react-query';
+import {
+  addToFavoritesApi,
+  removeFromFavApi,
+} from '@/features/favorites/api/FavoritesApi';
+import { useBaseMutation } from '@/shared/lib/react-query/useBaseMutation';
 
-export const favoritesCommands = () => {
-  // mutations
-  const AddToFavoritesCommand = useMutation({
-    mutationKey: ['add-fav'],
+export const removeFromFavMutation = () =>
+  useBaseMutation<void, string>({
+    mutationFn: removeFromFavApi,
+    invalidatedKeys: ['remove-favorite'],
+    successMessage: 'Favorite product removed',
+  });
+
+export const addToFavoritesMutation = () =>
+  useBaseMutation<void, string>({
     mutationFn: addToFavoritesApi,
-    onSuccess: (data) => {
-      toast({
-        title: data?.message,
-      });
-    },
-    onError: (err) => handleError(err, 'favorites'),
+    invalidatedKeys: ['add-favorite'],
+    successMessage: 'Product added to favorite list successfully',
   });
-
-  const RemoveFromFavCommand = useMutation({
-    mutationKey: ['rem-fav'],
-    mutationFn: removeFromFav,
-    onSuccess: (data) => {
-      toast({ title: data.message });
-    },
-    onError: (err) => handleError(err, 'favorites'),
-  });
-
-  return {
-    AddToFavoritesCommand,
-    RemoveFromFavCommand,
-  };
-};
-
-export type FavoriteCommandType = ReturnType<typeof favoritesCommands>;
