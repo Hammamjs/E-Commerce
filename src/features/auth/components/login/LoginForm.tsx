@@ -2,12 +2,12 @@ import { type Dispatch, type SetStateAction } from 'react';
 
 import PasswordInput from './PasswordInput';
 import SubmitLoginButton from './SubmitLoginButton';
-import LoginFooter from '../../../../components/login/LoginFooter';
+import LoginFooter from '../../components/login/LoginFooter';
 import ForgotPasswordLink from './ForgotPasswordLink';
 import EmailInput from './EmailInput';
 
 type LoginFormProps = {
-  handleSubmit: (form: FormData) => Promise<void>;
+  handleSubmit: (form: FormData) => void;
   email: string;
   setEmail: Dispatch<SetStateAction<string>>;
   password: string;

@@ -15,7 +15,7 @@ const Login = () => {
   const {
     email,
     handleSubmit,
-    isLoading,
+    isPending,
     setEmail,
     setPassword,
     setShowPassword,
@@ -39,7 +39,7 @@ const Login = () => {
             <LoginForm
               email={email}
               handleSubmit={handleSubmit}
-              isLoading={isLoading}
+              isLoading={isPending}
               password={password}
               setEmail={setEmail}
               setPassword={setPassword}
