@@ -4,7 +4,7 @@ import useOrders from '@/hooks/use-orders';
 import MainSection from './MainSection';
 import { useCart } from '@/features/cart';
 import useProfileUIState from '../hooks/useProfileUIState';
-import { useGetFavoritesQuery } from '@/features/favorites';
+import { useGetFavoritesQuery } from '@/features/favorites/query/useFavoritesQuery';
 
 const Profile = () => {
   const { orders } = useOrders({});
